@@ -49,7 +49,6 @@ public class Main {
                 c1.setData(obj);
                 ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
                 ObjectOutputStream oos = new ObjectOutputStream(bao);
-                //String msg = "HoaDT-PC";
                 oos.writeObject(c1);
                 byte[] buf= bao.toByteArray();
                 DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());

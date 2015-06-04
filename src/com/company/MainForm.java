@@ -1,9 +1,11 @@
 package com.company;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
+import java.awt.Robot;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,6 +13,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import java.awt.GridLayout;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +27,11 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
+import com.group3.pcremote.constant.SocketConstant;
+import com.group3.pcremote.model.SenderData;
+import com.group3.pcremote.model.ServerInfo;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -45,6 +57,8 @@ public class MainForm extends JFrame {
 					update_PC_Device uDP = new update_PC_Device(frame);
 					Thread t = new Thread(uDP);
 					t.start();
+					Thread t1 = new Thread(new ReceivePacketAndProcess(frame));
+					t1.start();
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -245,15 +259,71 @@ public class MainForm extends JFrame {
     	
     };
     
-    private static class receivePacketAndProcess implements Runnable {
+    private static class ReceivePacketAndProcess implements Runnable  {
 
     	MainForm f;
-    	public receivePacketAndProcess(MainForm mform) {
+    	
+    	public ReceivePacketAndProcess(MainForm mform) {
 			// TODO Auto-generated constructor stub
     		f = mform;
 		}
 		public void run() {
+			DatagramSocket dsk= null;
+			try {
+				Robot r = new Robot();
+			} catch (AWTException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        try {
+				dsk= new DatagramSocket(1234);
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        byte[] buffer= new byte[6000];
+	        DatagramPacket pk= new DatagramPacket(buffer, buffer.length);
 			// TODO Auto-generated method stub
+			while (true)
+			{
+		            try {
+						dsk.receive(pk);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		            System.out.println("Client: " + pk.getAddress() + ":" + pk.getPort());
+		            
+		            ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
+		            ObjectInputStream ois = null;
+					try {
+						ois = new ObjectInputStream(baos);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		            try {
+						SenderData c1 = (SenderData)ois.readObject();
+						if(c1.getCommand().equals(SocketConstant.SERVER_INFO)) {
+			                ServerInfo obj = new ServerInfo();
+			                obj.setServerName(InetAddress.getLocalHost().getHostName());
+			                obj.setServerIP(InetAddress.getLocalHost().toString());
+			                c1.setData(obj);
+			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
+			                ObjectOutputStream oos = new ObjectOutputStream(bao);
+			                oos.writeObject(c1);
+			                byte[] buf= bao.toByteArray();
+			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
+			                dsk.send(pkg);
+			            }
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				}
+			}
 			
 		}
     	
