@@ -45,7 +45,7 @@ public class MainForm extends JFrame {
 					update_PC_Device uDP = new update_PC_Device(frame);
 					Thread t = new Thread(uDP);
 					t.start();
-//					uPD.setF(frame);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -168,31 +168,6 @@ public class MainForm extends JFrame {
 		
 		createComponentMap();
 	}
-	
-//	private void doThings() {
-//        InetAddress addr = null;
-//        InetAddress[] addrs = null;
-//        try {
-//            addr = InetAddress.getLocalHost();
-//            addrs = InetAddress.getAllByName(addr.getHostName());
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-//        if (addr != null) {
-//            //cNameOutput.setText(addr.getHostName());
-//        }
-//        //cAddrOutput.setText(addr.getHostAddress());
-//        if (addrs != null) {
-//            for (InetAddress addr1 : addrs) {
-//                if (addr1 instanceof Inet4Address) {
-//                    //cAddrOutput.addItem(addr1.getHostAddress());
-//                }
-//
-//            }
-//        }
-//
-//
-//    }
 
 	private void createComponentMap() {
         componentMap = new HashMap<String,Component>();
@@ -270,6 +245,19 @@ public class MainForm extends JFrame {
     	
     };
     
+    private static class receivePacketAndProcess implements Runnable {
+
+    	MainForm f;
+    	public receivePacketAndProcess(MainForm mform) {
+			// TODO Auto-generated constructor stub
+    		f = mform;
+		}
+		public void run() {
+			// TODO Auto-generated method stub
+			
+		}
+    	
+    }
 }
 
 
