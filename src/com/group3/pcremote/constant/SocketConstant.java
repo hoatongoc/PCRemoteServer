@@ -4,4 +4,7 @@ public final class SocketConstant {
 	// socket constant
 	public static final int PORT = 1234;
 	public static final String SERVER_INFO = "GetServerInformation";
+	public static final String MOUSE_MOVE = "MouseMove";
+	public static final String MOUSE_CLICK = "MouseClick";
+	public static final String MOUSE_PRESS = "MousePress";
 }

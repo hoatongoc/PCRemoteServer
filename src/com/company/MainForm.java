@@ -29,11 +29,14 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 
 import com.group3.pcremote.constant.SocketConstant;
+import com.group3.pcremote.model.MouseClick;
 import com.group3.pcremote.model.SenderData;
 import com.group3.pcremote.model.ServerInfo;
+import com.sun.glass.events.MouseEvent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 
 
 public class MainForm extends JFrame {
@@ -171,7 +174,7 @@ public class MainForm extends JFrame {
 		
 		JLabel dAddrOutput = new JLabel("New label");
 		dAddrOutput.setName("dAddrOutput");
-		dAddrOutput.setBounds(133, 48, 46, 14);
+		dAddrOutput.setBounds(133, 48, 145, 14);
 		panel_4.add(dAddrOutput);
 		
 		JPanel panel_1 = new JPanel();
@@ -268,9 +271,10 @@ public class MainForm extends JFrame {
     		f = mform;
 		}
 		public void run() {
+			Robot r = null;
 			DatagramSocket dsk= null;
 			try {
-				Robot r = new Robot();
+				r = new Robot();
 			} catch (AWTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -293,7 +297,8 @@ public class MainForm extends JFrame {
 						e.printStackTrace();
 					}
 		            System.out.println("Client: " + pk.getAddress() + ":" + pk.getPort());
-		            
+		            JLabel addrAddrOutput = (JLabel) f.getComponentByName("dAddrOutput");
+		            addrAddrOutput.setText(pk.getAddress().toString());
 		            ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
 		            ObjectInputStream ois = null;
 					try {
@@ -303,19 +308,67 @@ public class MainForm extends JFrame {
 						e.printStackTrace();
 					}
 		            try {
-						SenderData c1 = (SenderData)ois.readObject();
-						if(c1.getCommand().equals(SocketConstant.SERVER_INFO)) {
+						SenderData data = (SenderData)ois.readObject();
+						if(data.getCommand().equals(SocketConstant.SERVER_INFO)) {
 			                ServerInfo obj = new ServerInfo();
 			                obj.setServerName(InetAddress.getLocalHost().getHostName());
 			                obj.setServerIP(InetAddress.getLocalHost().toString());
-			                c1.setData(obj);
+			                data.setData(obj);
 			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
 			                ObjectOutputStream oos = new ObjectOutputStream(bao);
-			                oos.writeObject(c1);
+			                oos.writeObject(data);
 			                byte[] buf= bao.toByteArray();
 			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
 			                dsk.send(pkg);
 			            }
+						else if(data.getCommand().equals(SocketConstant.MOUSE_CLICK)) {
+							if(((MouseClick)data.getData()).isPress()) {
+								int btnNum = ((MouseClick)data.getData()).getButtonNum();
+								if(btnNum == 1) {
+									r.mousePress(InputEvent.BUTTON1_MASK);
+								}
+								else if(btnNum == 2) {
+									r.mousePress(InputEvent.BUTTON2_MASK);
+								}
+								else if(btnNum == 3) {
+									r.mousePress(InputEvent.BUTTON3_MASK);
+								}
+							}
+							else {
+								int btnNum = ((MouseClick)data.getData()).getButtonNum();
+								if(btnNum == 1) {
+									r.mousePress(InputEvent.BUTTON1_MASK);
+									try {
+										Thread.sleep(20);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									r.mouseRelease(InputEvent.BUTTON1_MASK);
+								}
+								else if(btnNum == 2) {
+									r.mousePress(InputEvent.BUTTON2_MASK);
+									try {
+										Thread.sleep(20);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									r.mouseRelease(InputEvent.BUTTON2_MASK);
+								}
+								else if(btnNum == 3) {
+									r.mousePress(InputEvent.BUTTON3_MASK);
+									try {
+										Thread.sleep(20);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									r.mouseRelease(InputEvent.BUTTON3_MASK);
+								}
+							}
+						}
+						
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
