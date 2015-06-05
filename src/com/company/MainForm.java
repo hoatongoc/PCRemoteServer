@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import com.group3.pcremote.constant.SocketConstant;
 import com.group3.pcremote.model.MouseClick;
 import com.group3.pcremote.model.SenderData;
+import com.group3.pcremote.model.SenderDataForServerInfo;
 import com.group3.pcremote.model.ServerInfo;
 import com.sun.glass.events.MouseEvent;
 
@@ -310,67 +311,67 @@ public class MainForm extends JFrame {
 						e.printStackTrace();
 					}
 		            try {
-						SenderData data = (SenderData)ois.readObject();
+						SenderDataForServerInfo data = (SenderDataForServerInfo)ois.readObject();
 						if(data.getCommand().equals(SocketConstant.SERVER_INFO)) {
 			                ServerInfo obj = new ServerInfo();
 			                obj.setServerName(InetAddress.getLocalHost().getHostName());
 			                obj.setServerIP(InetAddress.getLocalHost().toString());
-			                data.setData(obj);
+			                data.setServerInfo(obj);
 			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
 			                ObjectOutputStream oos = new ObjectOutputStream(bao);
-			                oos.writeObject(obj);
+			                oos.writeObject(data);
 			                byte[] buf= bao.toByteArray();
 			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
 			                dsk.send(pkg);
 			                
 			            }
-						else if(data.getCommand().equals(SocketConstant.MOUSE_CLICK)) {
-							if(((MouseClick)data.getData()).isPress()) {
-								int btnNum = ((MouseClick)data.getData()).getButtonNum();
-								if(btnNum == 1) {
-									r.mousePress(InputEvent.BUTTON1_MASK);
-								}
-								else if(btnNum == 2) {
-									r.mousePress(InputEvent.BUTTON2_MASK);
-								}
-								else if(btnNum == 3) {
-									r.mousePress(InputEvent.BUTTON3_MASK);
-								}
-							}
-							else {
-								int btnNum = ((MouseClick)data.getData()).getButtonNum();
-								if(btnNum == 1) {
-									r.mousePress(InputEvent.BUTTON1_MASK);
-									try {
-										Thread.sleep(20);
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									r.mouseRelease(InputEvent.BUTTON1_MASK);
-								}
-								else if(btnNum == 2) {
-									r.mousePress(InputEvent.BUTTON2_MASK);
-									try {
-										Thread.sleep(20);
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									r.mouseRelease(InputEvent.BUTTON2_MASK);
-								}
-								else if(btnNum == 3) {
-									r.mousePress(InputEvent.BUTTON3_MASK);
-									try {
-										Thread.sleep(20);
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									r.mouseRelease(InputEvent.BUTTON3_MASK);
-								}
-							}
-						}
+//						else if(data.getCommand().equals(SocketConstant.MOUSE_CLICK)) {
+//							if(((MouseClick)data.getData()).isPress()) {
+//								int btnNum = ((MouseClick)data.getData()).getButtonNum();
+//								if(btnNum == 1) {
+//									r.mousePress(InputEvent.BUTTON1_MASK);
+//								}
+//								else if(btnNum == 2) {
+//									r.mousePress(InputEvent.BUTTON2_MASK);
+//								}
+//								else if(btnNum == 3) {
+//									r.mousePress(InputEvent.BUTTON3_MASK);
+//								}
+//							}
+//							else {
+//								int btnNum = ((MouseClick)data.getData()).getButtonNum();
+//								if(btnNum == 1) {
+//									r.mousePress(InputEvent.BUTTON1_MASK);
+//									try {
+//										Thread.sleep(20);
+//									} catch (InterruptedException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//									r.mouseRelease(InputEvent.BUTTON1_MASK);
+//								}
+//								else if(btnNum == 2) {
+//									r.mousePress(InputEvent.BUTTON2_MASK);
+//									try {
+//										Thread.sleep(20);
+//									} catch (InterruptedException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//									r.mouseRelease(InputEvent.BUTTON2_MASK);
+//								}
+//								else if(btnNum == 3) {
+//									r.mousePress(InputEvent.BUTTON3_MASK);
+//									try {
+//										Thread.sleep(20);
+//									} catch (InterruptedException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//									r.mouseRelease(InputEvent.BUTTON3_MASK);
+//								}
+//							}
+//						}
 						
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
