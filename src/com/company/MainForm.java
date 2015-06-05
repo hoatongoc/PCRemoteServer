@@ -318,7 +318,7 @@ public class MainForm extends JFrame {
 			                data.setData(obj);
 			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
 			                ObjectOutputStream oos = new ObjectOutputStream(bao);
-			                oos.writeObject(data);
+			                oos.writeObject(obj);
 			                byte[] buf= bao.toByteArray();
 			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
 			                dsk.send(pkg);
