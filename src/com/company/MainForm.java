@@ -270,6 +270,7 @@ public class MainForm extends JFrame {
 			// TODO Auto-generated constructor stub
     		f = mform;
 		}
+		@SuppressWarnings("resource")
 		public void run() {
 			Robot r = null;
 			DatagramSocket dsk= null;
@@ -281,6 +282,7 @@ public class MainForm extends JFrame {
 			}
 	        try {
 				dsk= new DatagramSocket(1234);
+				
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -320,6 +322,7 @@ public class MainForm extends JFrame {
 			                byte[] buf= bao.toByteArray();
 			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
 			                dsk.send(pkg);
+			                
 			            }
 						else if(data.getCommand().equals(SocketConstant.MOUSE_CLICK)) {
 							if(((MouseClick)data.getData()).isPress()) {
