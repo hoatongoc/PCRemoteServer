@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class ServerInfo implements Serializable {
 	private String serverIP;
 	private String serverName;
-	
+
 	public String getServerIP() {
 		return serverIP;
 	}

@@ -316,14 +316,13 @@ public class MainForm extends JFrame {
 			                ServerInfo obj = new ServerInfo();
 			                obj.setServerName(InetAddress.getLocalHost().getHostName());
 			                obj.setServerIP(InetAddress.getLocalHost().toString());
-			                data.setServerInfo(obj);
+//			                data.setServerInfo(obj);
 			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
 			                ObjectOutputStream oos = new ObjectOutputStream(bao);
-			                oos.writeObject(data);
+			                oos.writeObject(obj);
 			                byte[] buf= bao.toByteArray();
 			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
 			                dsk.send(pkg);
-			                
 			            }
 //						else if(data.getCommand().equals(SocketConstant.MOUSE_CLICK)) {
 //							if(((MouseClick)data.getData()).isPress()) {
