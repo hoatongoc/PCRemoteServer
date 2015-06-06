@@ -312,7 +312,7 @@ public class MainForm extends JFrame {
 					}
 		            try {
 						SenderData data = (SenderData)ois.readObject();
-						if(data.getCommand().equals(SocketConstant.SERVER_INFO)) {
+						if(data.getCommand().equals(SocketConstant.REQUEST_SERVER_INFO)) {
 							SenderData sendData = new SenderData();
 							sendData.setCommand(SocketConstant.RESPONSE_SERVER_INFO);
 			                ServerInfo obj = new ServerInfo();
