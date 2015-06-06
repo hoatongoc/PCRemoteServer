@@ -7,4 +7,6 @@ public final class SocketConstant {
 	public static final String MOUSE_MOVE = "MouseMove";
 	public static final String MOUSE_CLICK = "MouseClick";
 	public static final String MOUSE_PRESS = "MousePress";
+	public static final String REQUEST_SERVER_INFO = "RequestServerInformation";
+	public static final String RESPONSE_SERVER_INFO = "ResponseServerInfo";
 }
