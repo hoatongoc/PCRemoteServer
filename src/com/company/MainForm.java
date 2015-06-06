@@ -313,13 +313,15 @@ public class MainForm extends JFrame {
 		            try {
 						SenderData data = (SenderData)ois.readObject();
 						if(data.getCommand().equals(SocketConstant.SERVER_INFO)) {
+							SenderData sendData = new SenderData();
+							sendData.setCommand(SocketConstant.RESPONSE_SERVER_INFO);
 			                ServerInfo obj = new ServerInfo();
 			                obj.setServerName(InetAddress.getLocalHost().getHostName());
 			                obj.setServerIP(InetAddress.getLocalHost().toString());
-			                data.setData(obj);
+			                sendData.setData(obj);
 			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
 			                ObjectOutputStream oos = new ObjectOutputStream(bao);
-			                oos.writeObject(data);
+			                oos.writeObject(sendData);
 			                byte[] buf= bao.toByteArray();
 			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
 			                dsk.send(pkg);
