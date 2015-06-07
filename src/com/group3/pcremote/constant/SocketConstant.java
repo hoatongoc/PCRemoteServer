@@ -9,5 +9,6 @@ public final class SocketConstant {
 	public static final String MOUSE_PRESS = "MousePress";
 	public static final String REQUEST_SERVER_INFO = "RequestServerInformation";
 	public static final String RESPONSE_SERVER_INFO = "ResponseServerInfo";
-	public static final String PASSWORD = "123456789";
+	public static final String REQUEST_CONNECT = "RequestConnect";
+	public static final String RESPONSE_CONNECT_OK = "ResponseConnectOK";
 }

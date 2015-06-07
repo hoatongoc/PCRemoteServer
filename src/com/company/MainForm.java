@@ -31,9 +31,7 @@ import javax.swing.JButton;
 import com.group3.pcremote.constant.SocketConstant;
 import com.group3.pcremote.model.MouseClick;
 import com.group3.pcremote.model.SenderData;
-import com.group3.pcremote.model.SenderDataForServerInfo;
 import com.group3.pcremote.model.ServerInfo;
-import com.sun.glass.events.MouseEvent;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
