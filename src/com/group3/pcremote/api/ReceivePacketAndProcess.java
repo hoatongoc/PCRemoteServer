@@ -25,7 +25,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 
 	MainForm sForm;
 	DatagramSocket sDatagramSocket;
-	ReceivePacketAndProcess(MainForm f, DatagramSocket d) {
+	public ReceivePacketAndProcess(MainForm f, DatagramSocket d) {
 		this.sForm = f;
 		this.sDatagramSocket = d;
 	}
@@ -44,7 +44,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
         byte[] buffer= new byte[6000];
         DatagramPacket pk= new DatagramPacket(buffer, buffer.length);
 		// TODO Auto-generated method stub
-		while (!isCancelled())
+		while (true)
 		{
 	            try {
 	            	sDatagramSocket.receive(pk);
@@ -136,6 +136,6 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 			}
 		}
 		//sDatagramSocket.close();
-		return null;
+		//return null;
 	}
 }

@@ -27,7 +27,9 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.SwingWorker;
 
+import com.group3.pcremote.api.ReceivePacketAndProcess;
 import com.group3.pcremote.constant.SocketConstant;
 import com.group3.pcremote.model.MouseClick;
 import com.group3.pcremote.model.SenderData;
@@ -42,6 +44,7 @@ public class MainForm extends JFrame {
 
 	private JPanel mainPanel;
 	private HashMap<String, Component> componentMap;
+	private static DatagramSocket dSocket = null;
 	/**
 	 * Launch the application.
 	 */
@@ -54,15 +57,18 @@ public class MainForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					dSocket = new DatagramSocket(1234);
 					final MainForm frame = new MainForm();
 					frame.setVisible(true);
 					update_PC_Device uDP = new update_PC_Device(frame);
 					Thread t = new Thread(uDP);
 					t.start();
-					Thread t1 = new Thread(new ReceivePacketAndProcess(frame));
-					t1.start();
-					
+//					Thread xyz = new Thread(new ReceivePacketAndProcess(frame));
+//					xyz.start();
+					ReceivePacketAndProcess receiveAndProcess = new ReceivePacketAndProcess(frame,dSocket);
+					receiveAndProcess.execute();
 				} catch (Exception e) {
+					System.out.print(e.getMessage());
 					e.printStackTrace();
 				}
 			}
@@ -261,129 +267,129 @@ public class MainForm extends JFrame {
     	
     };
     
-    private static class ReceivePacketAndProcess implements Runnable  {
-
-    	MainForm f;
-    	
-    	public ReceivePacketAndProcess(MainForm mform) {
-			// TODO Auto-generated constructor stub
-    		f = mform;
-		}
-		@SuppressWarnings("resource")
-		public void run() {
-			Robot r = null;
-			DatagramSocket dsk= null;
-			try {
-				r = new Robot();
-			} catch (AWTException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        try {
-				dsk= new DatagramSocket(1234);
-				
-			} catch (SocketException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        byte[] buffer= new byte[6000];
-	        DatagramPacket pk= new DatagramPacket(buffer, buffer.length);
-			// TODO Auto-generated method stub
-			while (true)
-			{
-		            try {
-						dsk.receive(pk);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		            System.out.println("Client: " + pk.getAddress() + ":" + pk.getPort());
-		            JLabel addrAddrOutput = (JLabel) f.getComponentByName("dAddrOutput");
-		            addrAddrOutput.setText(pk.getAddress().toString());
-		            ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
-		            ObjectInputStream ois = null;
-					try {
-						ois = new ObjectInputStream(baos);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		            try {
-						SenderData data = (SenderData)ois.readObject();
-						if(data.getCommand().equals(SocketConstant.REQUEST_SERVER_INFO)) {
-							SenderData sendData = new SenderData();
-							sendData.setCommand(SocketConstant.RESPONSE_SERVER_INFO);
-			                ServerInfo obj = new ServerInfo();
-			                obj.setServerName(InetAddress.getLocalHost().getHostName());
-			                obj.setServerIP(InetAddress.getLocalHost().toString());
-			                sendData.setData(obj);
-			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
-			                ObjectOutputStream oos = new ObjectOutputStream(bao);
-			                oos.writeObject(sendData);
-			                byte[] buf= bao.toByteArray();
-			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
-			                dsk.send(pkg);
-			            }
-						else if(data.getCommand().equals(SocketConstant.MOUSE_CLICK)) {
-							if(((MouseClick)data.getData()).isPress()) {
-								int btnNum = ((MouseClick)data.getData()).getButtonNum();
-								if(btnNum == 1) {
-									r.mousePress(InputEvent.BUTTON1_MASK);
-								}
-								else if(btnNum == 2) {
-									r.mousePress(InputEvent.BUTTON2_MASK);
-								}
-								else if(btnNum == 3) {
-									r.mousePress(InputEvent.BUTTON3_MASK);
-								}
-							}
-							else {
-								int btnNum = ((MouseClick)data.getData()).getButtonNum();
-								if(btnNum == 1) {
-									r.mousePress(InputEvent.BUTTON1_MASK);
-									try {
-										Thread.sleep(20);
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									r.mouseRelease(InputEvent.BUTTON1_MASK);
-								}
-								else if(btnNum == 2) {
-									r.mousePress(InputEvent.BUTTON2_MASK);
-									try {
-										Thread.sleep(20);
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									r.mouseRelease(InputEvent.BUTTON2_MASK);
-								}
-								else if(btnNum == 3) {
-									r.mousePress(InputEvent.BUTTON3_MASK);
-									try {
-										Thread.sleep(20);
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									r.mouseRelease(InputEvent.BUTTON3_MASK);
-								}
-							}
-						}
-						
-					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-				}
-			}
-			
-		}
-    	
-    }
+//    private static class ReceivePacketAndProcess implements Runnable  {
+//
+//    	MainForm f;
+//    	
+//    	public ReceivePacketAndProcess(MainForm mform) {
+//			// TODO Auto-generated constructor stub
+//    		f = mform;
+//		}
+//		@SuppressWarnings("resource")
+//		public void run() {
+//			Robot r = null;
+//			DatagramSocket dsk= null;
+//			try {
+//				r = new Robot();
+//			} catch (AWTException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//	        try {
+//				dsk= new DatagramSocket(1234);
+//				
+//			} catch (SocketException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//	        byte[] buffer= new byte[6000];
+//	        DatagramPacket pk= new DatagramPacket(buffer, buffer.length);
+//			// TODO Auto-generated method stub
+//			while (true)
+//			{
+//		            try {
+//						dsk.receive(pk);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//		            System.out.println("Client: " + pk.getAddress() + ":" + pk.getPort());
+//		            JLabel addrAddrOutput = (JLabel) f.getComponentByName("dAddrOutput");
+//		            addrAddrOutput.setText(pk.getAddress().toString());
+//		            ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
+//		            ObjectInputStream ois = null;
+//					try {
+//						ois = new ObjectInputStream(baos);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//		            try {
+//						SenderData data = (SenderData)ois.readObject();
+//						if(data.getCommand().equals(SocketConstant.REQUEST_SERVER_INFO)) {
+//							SenderData sendData = new SenderData();
+//							sendData.setCommand(SocketConstant.RESPONSE_SERVER_INFO);
+//			                ServerInfo obj = new ServerInfo();
+//			                obj.setServerName(InetAddress.getLocalHost().getHostName());
+//			                obj.setServerIP(InetAddress.getLocalHost().toString());
+//			                sendData.setData(obj);
+//			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
+//			                ObjectOutputStream oos = new ObjectOutputStream(bao);
+//			                oos.writeObject(sendData);
+//			                byte[] buf= bao.toByteArray();
+//			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
+//			                dsk.send(pkg);
+//			            }
+//						else if(data.getCommand().equals(SocketConstant.MOUSE_CLICK)) {
+//							if(((MouseClick)data.getData()).isPress()) {
+//								int btnNum = ((MouseClick)data.getData()).getButtonNum();
+//								if(btnNum == 1) {
+//									r.mousePress(InputEvent.BUTTON1_MASK);
+//								}
+//								else if(btnNum == 2) {
+//									r.mousePress(InputEvent.BUTTON2_MASK);
+//								}
+//								else if(btnNum == 3) {
+//									r.mousePress(InputEvent.BUTTON3_MASK);
+//								}
+//							}
+//							else {
+//								int btnNum = ((MouseClick)data.getData()).getButtonNum();
+//								if(btnNum == 1) {
+//									r.mousePress(InputEvent.BUTTON1_MASK);
+//									try {
+//										Thread.sleep(20);
+//									} catch (InterruptedException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//									r.mouseRelease(InputEvent.BUTTON1_MASK);
+//								}
+//								else if(btnNum == 2) {
+//									r.mousePress(InputEvent.BUTTON2_MASK);
+//									try {
+//										Thread.sleep(20);
+//									} catch (InterruptedException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//									r.mouseRelease(InputEvent.BUTTON2_MASK);
+//								}
+//								else if(btnNum == 3) {
+//									r.mousePress(InputEvent.BUTTON3_MASK);
+//									try {
+//										Thread.sleep(20);
+//									} catch (InterruptedException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//									r.mouseRelease(InputEvent.BUTTON3_MASK);
+//								}
+//							}
+//						}
+//						
+//					} catch (ClassNotFoundException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//				}
+//			}
+//			
+//		}
+//    	
+//    }
 }
 
 
