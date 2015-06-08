@@ -107,6 +107,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 		return null;
 	}
 	
+	//send datagram object
 	private void sendDatagramObject(Object dataToSend, InetAddress addrToSend, int portToSend) {
 		 ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
 	        ObjectOutputStream oos = null;
@@ -131,6 +132,8 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 				e.printStackTrace();
 			}
 	}
+	
+	//handle when there's a android device want to connect
 	private void handleRequestServerInfo(InetAddress sendAddr, int sendPort) {
 		SenderData sendData = new SenderData();
 		sendData.setCommand(SocketConstant.RESPONSE_SERVER_INFO);
@@ -206,7 +209,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 		String title = "Connect Confirmation";
 		int connectConfirm = JOptionPane.showConfirmDialog(null,message,title,JOptionPane.YES_NO_OPTION);
 		if(connectConfirm == JOptionPane.YES_OPTION) {
-			deviceConnected = true;
+			//deviceConnected = true;
 			JLabel dAddrLabel = (JLabel) sForm.getComponentByName("dAddrOutput");
 			JLabel dNameLabel = (JLabel) sForm.getComponentByName("dNameOutput");
             connectedDeviceAdress = dAddr;
