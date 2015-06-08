@@ -84,7 +84,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 							else if(command.equals(SocketConstant.REQUEST_CONNECT)) {
 								ClientInfo clientInfo  = (ClientInfo) data.getData();
 								if(clientInfo!=null)
-								handleConnectRequest(clientInfo.getclientName(),clientInfo.getclientIP());
+								handleConnectRequest(clientInfo.getClientName(),clientInfo.getClientIP());
 							}
 							else if(command.equals(SocketConstant.MOUSE_CLICK)) {
 								MouseClick mouseClickData = (MouseClick)data.getData();
