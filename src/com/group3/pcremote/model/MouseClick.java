@@ -1,18 +1,20 @@
 package com.group3.pcremote.model;
 
+import com.group3.pcremote.constant.MouseConstants;
+
 public class MouseClick {
 	private int buttonNum;
-	private boolean press;
+	private int press;
 	public MouseClick() {
 		// TODO Auto-generated constructor stub
 		buttonNum = 1;
-		press = false;
+		press = MouseConstants.CLICK;
 	}   
-	public boolean isPress() {
+	public int getPress() {
 		return press;
 	}
 
-	public void setPress(boolean press) {
+	public void setPress(int press) {
 		this.press = press;
 	}
 

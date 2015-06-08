@@ -10,5 +10,6 @@ public final class SocketConstant {
 	public static final String REQUEST_SERVER_INFO = "RequestServerInformation";
 	public static final String RESPONSE_SERVER_INFO = "ResponseServerInfo";
 	public static final String REQUEST_CONNECT = "RequestConnect";
-	public static final String RESPONSE_CONNECT_OK = "ResponseConnectOK";
+	 public static final String CONNECT_ACCEPT = "ConnectAccept";
+	 public static final String CONNECT_REFUSE = "ConnectRefuse";
 }

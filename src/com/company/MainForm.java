@@ -1,11 +1,9 @@
 package com.company;
 
-import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
-import java.awt.Robot;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,11 +11,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import java.awt.GridLayout;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,19 +20,15 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
-import javax.swing.SwingWorker;
 
 import com.group3.pcremote.api.ReceivePacketAndProcess;
 import com.group3.pcremote.constant.SocketConstant;
-import com.group3.pcremote.model.MouseClick;
-import com.group3.pcremote.model.SenderData;
-import com.group3.pcremote.model.ServerInfo;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 
 
+@SuppressWarnings("serial")
 public class MainForm extends JFrame {
 
 	private JPanel mainPanel;
@@ -57,7 +46,7 @@ public class MainForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					dSocket = new DatagramSocket(1234);
+					dSocket = new DatagramSocket(SocketConstant.PORT);
 					final MainForm frame = new MainForm();
 					frame.setVisible(true);
 					update_PC_Device uDP = new update_PC_Device(frame);
@@ -177,7 +166,7 @@ public class MainForm extends JFrame {
 		dAddr.setBounds(10, 48, 91, 14);
 		panel_4.add(dAddr);
 		
-		JLabel dAddrOutput = new JLabel("New label");
+		JLabel dAddrOutput = new JLabel("Device Address Here");
 		dAddrOutput.setName("dAddrOutput");
 		dAddrOutput.setBounds(133, 48, 145, 14);
 		panel_4.add(dAddrOutput);
