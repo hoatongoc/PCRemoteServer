@@ -99,6 +99,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 				} catch (IOException e) {
 					
 					e.printStackTrace();
+				
 			}
 				
 		}
