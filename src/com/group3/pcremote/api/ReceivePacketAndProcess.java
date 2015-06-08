@@ -50,6 +50,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 		} catch (AWTException e) {
 			
 			e.printStackTrace();
+			
 		}
         
         byte[] buffer= new byte[6000];
