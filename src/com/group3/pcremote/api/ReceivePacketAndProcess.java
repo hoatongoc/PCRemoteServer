@@ -12,9 +12,13 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import com.company.MainForm;
@@ -204,40 +208,63 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 			}
 		}
 	}
-	private void handleConnectRequest(String dName, String dAddr) {
-		String message = "Device blah blah " + dName + " want to connect. Confirm?\n Yes to accept, No to refuse the connect";
-		String title = "Connect Confirmation";
-		int connectConfirm = JOptionPane.showConfirmDialog(null,message,title,JOptionPane.YES_NO_OPTION);
-		if(connectConfirm == JOptionPane.YES_OPTION) {
-			//deviceConnected = true;
-			JLabel dAddrLabel = (JLabel) sForm.getComponentByName("dAddrOutput");
-			JLabel dNameLabel = (JLabel) sForm.getComponentByName("dNameOutput");
-            connectedDeviceAdress = dAddr;
-            connectedDeviceName = dName;
-			dAddrLabel.setText(connectedDeviceAdress);
-            dNameLabel.setText(connectedDeviceName);
-            
-            //Send confirm packet back to Android device
-            SenderData confirmData = new SenderData();
-            confirmData.setCommand(SocketConstant.CONNECT_ACCEPT);
-            try {
-				sendDatagramObject(confirmData, InetAddress.getByName(connectedDeviceAdress), SocketConstant.PORT);
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else if(connectConfirm == JOptionPane.NO_OPTION) {
-			//do blah blah
-			 SenderData confirmData = new SenderData();
-	            confirmData.setCommand(SocketConstant.CONNECT_REFUSE);
-	            try {
-					sendDatagramObject(confirmData, InetAddress.getByName(connectedDeviceAdress), SocketConstant.PORT);
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+	private void handleConnectRequest(final String dName, final String dAddr) {
+		Thread t = new Thread(new Runnable() {
+			
+			public void run() {
+				// TODO Auto-generated method stub
+				
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						JOptionPane.getRootFrame().dispose();
+					}
+				}, 4000);
+				
+				
+				String message = "Device blah blah " + dName + " want to connect. Confirm?\n Yes to accept, No to refuse the connect";
+				String title = "Connect Confirmation";
+				
+				int connectConfirm = JOptionPane.showConfirmDialog(null,message,title,JOptionPane.YES_NO_OPTION);
+				if(connectConfirm == JOptionPane.YES_OPTION) {
+					//deviceConnected = true;
+					JLabel dAddrLabel = (JLabel) sForm.getComponentByName("dAddrOutput");
+					JLabel dNameLabel = (JLabel) sForm.getComponentByName("dNameOutput");
+		            connectedDeviceAdress = dAddr;
+		            connectedDeviceName = dName;
+					dAddrLabel.setText(connectedDeviceAdress);
+		            dNameLabel.setText(connectedDeviceName);
+		            
+		            //Send confirm packet back to Android device
+		            SenderData confirmData = new SenderData();
+		            confirmData.setCommand(SocketConstant.CONNECT_ACCEPT);
+		            try {
+						sendDatagramObject(confirmData, InetAddress.getByName(connectedDeviceAdress), SocketConstant.PORT);
+						timer.cancel();
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-		}
+				else if(connectConfirm == JOptionPane.NO_OPTION) {
+					//do blah blah
+					 SenderData confirmData = new SenderData();
+			            confirmData.setCommand(SocketConstant.CONNECT_REFUSE);
+			            try {
+			            	timer.cancel();
+							sendDatagramObject(confirmData, InetAddress.getByName(connectedDeviceAdress), SocketConstant.PORT);
+						} catch (UnknownHostException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+			}
+		});
+		
+		t.start();
 	}
 	
 	
