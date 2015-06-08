@@ -22,6 +22,7 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 
 import com.group3.pcremote.api.ReceivePacketAndProcess;
+import com.group3.pcremote.api.UpdatePCNameAndIPs;
 import com.group3.pcremote.constant.SocketConstant;
 
 import java.awt.event.ActionEvent;
@@ -32,7 +33,10 @@ import java.awt.event.ActionListener;
 public class MainForm extends JFrame {
 
 	private JPanel mainPanel;
+	//Hash map stores Components of MainForm frame
 	private HashMap<String, Component> componentMap;
+	
+	//DatagramSocket for send and receive packets
 	private static DatagramSocket dSocket = null;
 	/**
 	 * Launch the application.
@@ -49,13 +53,16 @@ public class MainForm extends JFrame {
 					dSocket = new DatagramSocket(SocketConstant.PORT);
 					final MainForm frame = new MainForm();
 					frame.setVisible(true);
-					update_PC_Device uDP = new update_PC_Device(frame);
-					Thread t = new Thread(uDP);
-					t.start();
-//					Thread xyz = new Thread(new ReceivePacketAndProcess(frame));
-//					xyz.start();
+					
+					// get PC name and IPs
+					UpdatePCNameAndIPs updatePCNameAndIPs = new UpdatePCNameAndIPs(frame);
+					updatePCNameAndIPs.execute();
+					
+					//Begin receive and handle connections
 					ReceivePacketAndProcess receiveAndProcess = new ReceivePacketAndProcess(frame,dSocket);
 					receiveAndProcess.execute();
+					
+					
 				} catch (Exception e) {
 					System.out.print(e.getMessage());
 					e.printStackTrace();
@@ -189,6 +196,7 @@ public class MainForm extends JFrame {
         }
     }
 
+	//function that helps us get a Component of frame by its name
     public Component getComponentByName(String name) {
         if (componentMap.containsKey(name)) {
             return componentMap.get(name);
@@ -196,6 +204,7 @@ public class MainForm extends JFrame {
         else return null;
     }
 
+    //Get all components of frame
     public List<Component> getAllComponents(final Container c) {
         Component[] comps = c.getComponents();
         List<Component> compList = new ArrayList<Component>();
@@ -206,179 +215,6 @@ public class MainForm extends JFrame {
         }
         return compList;
     }
-    
-    private static void updatePCNameAndAddr(MainForm f) {
-    	InetAddress addr = null;
-        InetAddress[] addrs = null;
-        @SuppressWarnings("unchecked")
-		JComboBox<String> cAddrOutput = (JComboBox<String>) f.getComponentByName("cAddrOutput");
-    	cAddrOutput.removeAllItems();
-        try {
-            addr = InetAddress.getLocalHost();
-            addrs = InetAddress.getAllByName(addr.getHostName());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        if (addr != null) {
-        	JLabel cNameOutput = (JLabel) f.getComponentByName("cNameOutput");
-            cNameOutput.setText(addr.getHostName());
-        }
-        if (addrs != null) {
-            for (InetAddress addr1 : addrs) {
-                if (addr1 instanceof Inet4Address) {
-                    cAddrOutput.addItem(addr1.getHostAddress());
-                }
-            }
-        }
-    }
-    
-    private static class update_PC_Device implements Runnable {
-    	
-    	private MainForm f;
-    	
-    	public update_PC_Device(MainForm form) {
-			// TODO Auto-generated constructor stub
-    		f=form;
-    		
-		}
-    	public MainForm getF() {
-			return f;
-		}
-		public void setF(MainForm f) {
-			this.f = f;
-		}
-		public void run() {
-    		// TODO Auto-generated method stub
-    		updatePCNameAndAddr(f);
-    		
-    	}
-    	
-    	
-    };
-    
-//    private static class ReceivePacketAndProcess implements Runnable  {
-//
-//    	MainForm f;
-//    	
-//    	public ReceivePacketAndProcess(MainForm mform) {
-//			// TODO Auto-generated constructor stub
-//    		f = mform;
-//		}
-//		@SuppressWarnings("resource")
-//		public void run() {
-//			Robot r = null;
-//			DatagramSocket dsk= null;
-//			try {
-//				r = new Robot();
-//			} catch (AWTException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	        try {
-//				dsk= new DatagramSocket(1234);
-//				
-//			} catch (SocketException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	        byte[] buffer= new byte[6000];
-//	        DatagramPacket pk= new DatagramPacket(buffer, buffer.length);
-//			// TODO Auto-generated method stub
-//			while (true)
-//			{
-//		            try {
-//						dsk.receive(pk);
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//		            System.out.println("Client: " + pk.getAddress() + ":" + pk.getPort());
-//		            JLabel addrAddrOutput = (JLabel) f.getComponentByName("dAddrOutput");
-//		            addrAddrOutput.setText(pk.getAddress().toString());
-//		            ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
-//		            ObjectInputStream ois = null;
-//					try {
-//						ois = new ObjectInputStream(baos);
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//		            try {
-//						SenderData data = (SenderData)ois.readObject();
-//						if(data.getCommand().equals(SocketConstant.REQUEST_SERVER_INFO)) {
-//							SenderData sendData = new SenderData();
-//							sendData.setCommand(SocketConstant.RESPONSE_SERVER_INFO);
-//			                ServerInfo obj = new ServerInfo();
-//			                obj.setServerName(InetAddress.getLocalHost().getHostName());
-//			                obj.setServerIP(InetAddress.getLocalHost().toString());
-//			                sendData.setData(obj);
-//			                ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
-//			                ObjectOutputStream oos = new ObjectOutputStream(bao);
-//			                oos.writeObject(sendData);
-//			                byte[] buf= bao.toByteArray();
-//			                DatagramPacket pkg = new DatagramPacket(buf,buf.length,pk.getAddress(),pk.getPort());
-//			                dsk.send(pkg);
-//			            }
-//						else if(data.getCommand().equals(SocketConstant.MOUSE_CLICK)) {
-//							if(((MouseClick)data.getData()).isPress()) {
-//								int btnNum = ((MouseClick)data.getData()).getButtonNum();
-//								if(btnNum == 1) {
-//									r.mousePress(InputEvent.BUTTON1_MASK);
-//								}
-//								else if(btnNum == 2) {
-//									r.mousePress(InputEvent.BUTTON2_MASK);
-//								}
-//								else if(btnNum == 3) {
-//									r.mousePress(InputEvent.BUTTON3_MASK);
-//								}
-//							}
-//							else {
-//								int btnNum = ((MouseClick)data.getData()).getButtonNum();
-//								if(btnNum == 1) {
-//									r.mousePress(InputEvent.BUTTON1_MASK);
-//									try {
-//										Thread.sleep(20);
-//									} catch (InterruptedException e) {
-//										// TODO Auto-generated catch block
-//										e.printStackTrace();
-//									}
-//									r.mouseRelease(InputEvent.BUTTON1_MASK);
-//								}
-//								else if(btnNum == 2) {
-//									r.mousePress(InputEvent.BUTTON2_MASK);
-//									try {
-//										Thread.sleep(20);
-//									} catch (InterruptedException e) {
-//										// TODO Auto-generated catch block
-//										e.printStackTrace();
-//									}
-//									r.mouseRelease(InputEvent.BUTTON2_MASK);
-//								}
-//								else if(btnNum == 3) {
-//									r.mousePress(InputEvent.BUTTON3_MASK);
-//									try {
-//										Thread.sleep(20);
-//									} catch (InterruptedException e) {
-//										// TODO Auto-generated catch block
-//										e.printStackTrace();
-//									}
-//									r.mouseRelease(InputEvent.BUTTON3_MASK);
-//								}
-//							}
-//						}
-//						
-//					} catch (ClassNotFoundException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//				}
-//			}
-//			
-//		}
-//    	
-//    }
 }
 
 

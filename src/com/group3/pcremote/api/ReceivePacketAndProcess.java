@@ -35,14 +35,17 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 	private boolean deviceConnected = false;
 	private String connectedDeviceAdress = "";
 	private String connectedDeviceName = "";
-	public boolean isDeviceConnected() {
-		return deviceConnected;
-	}
+	
 
 	DatagramSocket sDatagramSocket;
 	public ReceivePacketAndProcess(MainForm f, DatagramSocket d) {
 		this.sForm = f;
 		this.sDatagramSocket = d;
+	}
+	
+	
+	public boolean isDeviceConnected() {
+		return deviceConnected;
 	}
 	@Override
 	protected String doInBackground() throws Exception {
@@ -59,7 +62,9 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
         
         byte[] buffer= new byte[6000];
         DatagramPacket pk= new DatagramPacket(buffer, buffer.length);
+        
 		// TODO Auto-generated method stub
+        //loop for receiving packets and proccess them
 		while (!isCancelled())
 		{
 	            try {
@@ -78,18 +83,23 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 					e.printStackTrace();
 				}
 	            try {
+	            	//read received object
 					SenderData data = (SenderData)ois.readObject();
 					if(data!=null) {
+						//get command of received object
 						Object command = data.getCommand();
 						if(command!=null) {
+							//if command is request info of server, handle it
 							if(command.equals(SocketConstant.REQUEST_SERVER_INFO)) {
 								handleRequestServerInfo(pk.getAddress(), pk.getPort());
 				            }
+							//if command is request connection for controlling PC, handle it
 							else if(command.equals(SocketConstant.REQUEST_CONNECT)) {
 								ClientInfo clientInfo  = (ClientInfo) data.getData();
 								if(clientInfo!=null)
 								handleConnectRequest(clientInfo.getClientName(),clientInfo.getClientIP());
 							}
+							//if command is peform mouse click actions, handle it
 							else if(command.equals(SocketConstant.MOUSE_CLICK)) {
 								MouseClick mouseClickData = (MouseClick)data.getData();
 								if(mouseClickData!=null) handleMouseClick(mouseClickData,r);
@@ -113,7 +123,14 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 	
 	//send datagram object
 	private void sendDatagramObject(Object dataToSend, InetAddress addrToSend, int portToSend) {
-		 ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
+		 	/* Create ByteArratOutputStream and ObjectOutput Stream
+		 	 * then write dataToSend to ObjectOutputStream  
+		 	 * finally, put it into DatagramSocket and send it
+		 	 * 
+		 	 * 
+		 	 * */ 
+		
+			ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
 	        ObjectOutputStream oos = null;
 			try {
 				oos = new ObjectOutputStream(bao);
@@ -139,8 +156,10 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 	
 	//handle when there's a android device want to connect
 	private void handleRequestServerInfo(InetAddress sendAddr, int sendPort) {
+		// Create a new SendData object
 		SenderData sendData = new SenderData();
 		sendData.setCommand(SocketConstant.RESPONSE_SERVER_INFO);
+		//create a new ServerInfo object
         ServerInfo obj = new ServerInfo();
         try {
 			obj.setServerName(InetAddress.getLocalHost().getHostName());
@@ -154,44 +173,29 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 			
 			e.printStackTrace();
 		}
+        //bring ServerInfo object into SendData Object, then send it to Android device
         sendData.setData(obj);
         sendDatagramObject(sendData, sendAddr, sendPort);
-//        ByteArrayOutputStream bao = new ByteArrayOutputStream(6000);
-//        ObjectOutputStream oos = null;
-//		try {
-//			oos = new ObjectOutputStream(bao);
-//		} catch (IOException e) {
-//			
-//			e.printStackTrace();
-//		}
-//        try {
-//			oos.writeObject(sendData);
-//		} catch (IOException e) {
-//			
-//			e.printStackTrace();
-//		}
-//        byte[] buf= bao.toByteArray();
-//        DatagramPacket pkg = new DatagramPacket(buf,buf.length,sendAddr,sendPort);
-//        try {
-//			sDatagramSocket.send(pkg);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 	
 	private void handleMouseClick(MouseClick mouseData, Robot r) {
+		//get index of mouse button that android device wants to control
 		int btnNum = (mouseData.getButtonNum());
+		
+		//if the command is press the mouse button
 		if(mouseData.getPress() == MouseConstants.PRESS) {
-			if(btnNum == 1) {
+			if(btnNum == MouseConstants.LEFT_MOUSE) {
 				r.mousePress(InputEvent.BUTTON1_MASK);
 			}
-			else if(btnNum == 2) {
+			else if(btnNum == MouseConstants.MIDDLE_MOUSE) {
 				r.mousePress(InputEvent.BUTTON2_MASK);
 			}
-			else if(btnNum == 3) {
+			else if(btnNum == MouseConstants.RIGHT_MOUSE) {
 				r.mousePress(InputEvent.BUTTON3_MASK);
 			}
 		}
+		
+		//if the command is mouse click
 		else if (mouseData.getPress() == MouseConstants.CLICK) {
 			
 			if(btnNum == 1) {
@@ -207,10 +211,27 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 				r.mouseRelease(InputEvent.BUTTON3_MASK);
 			}
 		}
+		
+		//if the command is release mouse button
+		else if(mouseData.getPress() == MouseConstants.RELEASE) {
+			if(btnNum == 1) {
+				r.mouseRelease(InputEvent.BUTTON1_MASK);
+			}
+			else if(btnNum == 2) {
+				r.mouseRelease(InputEvent.BUTTON2_MASK);
+			}
+			else if(btnNum == 3) {
+				r.mouseRelease(InputEvent.BUTTON3_MASK);
+			}
+		}
 	}
+	
+	//handle the request connect command
 	private void handleConnectRequest(final String dName, final String dAddr) {
+		//create new thread for not stopping receiving broadcast packets from android devices
 		Thread t = new Thread(new Runnable() {
 			
+			//if timeout after 4 secs, dismiss the confirm dialog
 			public void run() {
 				// TODO Auto-generated method stub
 				
@@ -225,10 +246,13 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 				}, 4000);
 				
 				
+				//show the confim dialog
 				String message = "Device blah blah " + dName + " want to connect. Confirm?\n Yes to accept, No to refuse the connect";
 				String title = "Connect Confirmation";
 				
 				int connectConfirm = JOptionPane.showConfirmDialog(null,message,title,JOptionPane.YES_NO_OPTION);
+				
+				//If user choose yes option (accept connect) then update UI and send back the confirm packet to android decvice
 				if(connectConfirm == JOptionPane.YES_OPTION) {
 					//deviceConnected = true;
 					JLabel dAddrLabel = (JLabel) sForm.getComponentByName("dAddrOutput");
@@ -249,6 +273,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 						e.printStackTrace();
 					}
 				}
+				//else send back to android device the refuse connection packet
 				else if(connectConfirm == JOptionPane.NO_OPTION) {
 					//do blah blah
 					 SenderData confirmData = new SenderData();
