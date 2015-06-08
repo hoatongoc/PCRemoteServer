@@ -6,19 +6,19 @@ public class ClientInfo implements Serializable {
 	private String clientIP;
 	private String clientName;
 
-	public String getclientIP() {
+	public String getClientIP() {
 		return clientIP;
 	}
 
-	public void setclientIP(String clientIP) {
+	public void setClientIP(String clientIP) {
 		this.clientIP = clientIP;
 	}
 
-	public String getclientName() {
+	public String getClientName() {
 		return clientName;
 	}
 
-	public void setclientName(String clientName) {
+	public void setClientName(String clientName) {
 		this.clientName = clientName;
 	}
 
