@@ -1,8 +1,10 @@
 package com.group3.pcremote.model;
 
+import java.io.Serializable;
+
 import com.group3.pcremote.constant.MouseConstant;
 
-public class MouseClick {
+public class MouseClick implements Serializable {
 	private int buttonIndex;
 	private int press;
 	public MouseClick() {

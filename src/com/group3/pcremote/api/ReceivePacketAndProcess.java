@@ -12,9 +12,11 @@ import java.net.InetAddress;
 import javax.swing.SwingWorker;
 
 import com.company.MainForm;
+import com.group3.pcremote.constant.KeyboardConstant;
 import com.group3.pcremote.constant.MouseConstant;
 import com.group3.pcremote.constant.SocketConstant;
 import com.group3.pcremote.model.ClientInfo;
+import com.group3.pcremote.model.KeyboardCommand;
 import com.group3.pcremote.model.MouseClick;
 import com.group3.pcremote.model.SenderData;
 import com.group3.pcremote.api.HandleConnectionRequest;
@@ -114,6 +116,13 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 								if(mouseClick!=null) {
 									HandleMouseClick handleMouseClick = new HandleMouseClick(mouseClick, robot);
 									handleMouseClick.execute();
+								}
+							}
+							else if(command.equals(KeyboardConstant.KEYBOARD_COMMAND)) {
+								KeyboardCommand keyboardCommand = (KeyboardCommand)data.getData();
+								if(keyboardCommand!=null) {
+									HandleKeyboardPress handleKeyboardPress = new HandleKeyboardPress(keyboardCommand, robot);
+									handleKeyboardPress.execute();
 								}
 							}
 						}

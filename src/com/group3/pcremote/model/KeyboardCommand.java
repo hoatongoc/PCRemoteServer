@@ -1,6 +1,8 @@
 package com.group3.pcremote.model;
 
-public class KeyboardCommands {
+import java.io.Serializable;
+
+public class KeyboardCommand implements Serializable {
 	private int keyboardCode;
 	private int press;
 	public int getPress() {

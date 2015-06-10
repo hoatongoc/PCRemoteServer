@@ -49,15 +49,15 @@ public class HandleMouseClick extends SwingWorker<String, String> {
 		//if the command is mouse click
 		else if (mouseClick.getPress() == MouseConstant.CLICK) {
 			
-			if(btnNum == 1) {
+			if(btnNum == MouseConstant.LEFT_MOUSE) {
 				robot.mousePress(InputEvent.BUTTON1_MASK);
 				robot.mouseRelease(InputEvent.BUTTON1_MASK);
 			}
-			else if(btnNum == 2) {
+			else if(btnNum == MouseConstant.MIDDLE_MOUSE) {
 				robot.mousePress(InputEvent.BUTTON2_MASK);
 				robot.mouseRelease(InputEvent.BUTTON2_MASK);
 			}
-			else if(btnNum == 3) {
+			else if(btnNum == MouseConstant.RIGHT_MOUSE) {
 				robot.mousePress(InputEvent.BUTTON3_MASK);
 				robot.mouseRelease(InputEvent.BUTTON3_MASK);
 			}
