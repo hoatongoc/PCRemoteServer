@@ -5,7 +5,7 @@ import java.awt.event.InputEvent;
 
 import javax.swing.SwingWorker;
 
-import com.group3.pcremote.constant.MouseConstants;
+import com.group3.pcremote.constant.MouseConstant;
 import com.group3.pcremote.model.MouseClick;
 
 public class HandleMouseClick extends SwingWorker<String, String> {
@@ -34,20 +34,20 @@ public class HandleMouseClick extends SwingWorker<String, String> {
 		
 		int btnNum = (mouseClick.getButtonIndex());
 		//if the command is press the mouse button
-		if(mouseClick.getPress() == MouseConstants.PRESS) {
-			if(btnNum == MouseConstants.LEFT_MOUSE) {
+		if(mouseClick.getPress() == MouseConstant.PRESS) {
+			if(btnNum == MouseConstant.LEFT_MOUSE) {
 				robot.mousePress(InputEvent.BUTTON1_MASK);
 			}
-			else if(btnNum == MouseConstants.MIDDLE_MOUSE) {
+			else if(btnNum == MouseConstant.MIDDLE_MOUSE) {
 				robot.mousePress(InputEvent.BUTTON2_MASK);
 			}
-			else if(btnNum == MouseConstants.RIGHT_MOUSE) {
+			else if(btnNum == MouseConstant.RIGHT_MOUSE) {
 				robot.mousePress(InputEvent.BUTTON3_MASK);
 			}
 		}
 		
 		//if the command is mouse click
-		else if (mouseClick.getPress() == MouseConstants.CLICK) {
+		else if (mouseClick.getPress() == MouseConstant.CLICK) {
 			
 			if(btnNum == 1) {
 				robot.mousePress(InputEvent.BUTTON1_MASK);
@@ -64,7 +64,7 @@ public class HandleMouseClick extends SwingWorker<String, String> {
 		}
 		
 		//if the command is release mouse button
-		else if(mouseClick.getPress() == MouseConstants.RELEASE) {
+		else if(mouseClick.getPress() == MouseConstant.RELEASE) {
 			if(btnNum == 1) {
 				robot.mouseRelease(InputEvent.BUTTON1_MASK);
 			}

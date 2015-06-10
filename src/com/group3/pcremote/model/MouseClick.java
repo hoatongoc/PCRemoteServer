@@ -1,6 +1,6 @@
 package com.group3.pcremote.model;
 
-import com.group3.pcremote.constant.MouseConstants;
+import com.group3.pcremote.constant.MouseConstant;
 
 public class MouseClick {
 	private int buttonIndex;
@@ -8,7 +8,7 @@ public class MouseClick {
 	public MouseClick() {
 		// TODO Auto-generated constructor stub
 		buttonIndex = 1;
-		press = MouseConstants.CLICK;
+		press = MouseConstant.CLICK;
 	}   
 	public int getPress() {
 		return press;

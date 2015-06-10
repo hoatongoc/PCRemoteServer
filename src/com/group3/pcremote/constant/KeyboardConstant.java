@@ -1,6 +1,6 @@
 package com.group3.pcremote.constant;
 
-public class KeyboardConstants {
+public class KeyboardConstant {
 	
 	public static final int PRESS = 0;
 	public static final int RELEASE = 1;

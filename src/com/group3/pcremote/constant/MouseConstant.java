@@ -1,6 +1,6 @@
 package com.group3.pcremote.constant;
 
-public class MouseConstants {
+public class MouseConstant {
 
 	public static final int CLICK = 0;
 	public static final int PRESS = 1;
