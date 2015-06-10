@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import javax.swing.SwingWorker;
 
 import com.company.MainForm;
+import com.group3.pcremote.constant.MouseConstant;
 import com.group3.pcremote.constant.SocketConstant;
 import com.group3.pcremote.model.ClientInfo;
 import com.group3.pcremote.model.MouseClick;
@@ -108,7 +109,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 								}
 							}
 							//if command is peform mouse click actions, handle it
-							else if(command.equals(SocketConstant.MOUSE_CLICK)) {
+							else if(command.equals(MouseConstant.MOUSE_COMMAND)) {
 								MouseClick mouseClick = (MouseClick)data.getData();
 								if(mouseClick!=null) {
 									HandleMouseClick handleMouseClick = new HandleMouseClick(mouseClick, robot);
