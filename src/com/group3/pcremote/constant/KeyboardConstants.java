@@ -1,6 +1,10 @@
 package com.group3.pcremote.constant;
 
 public class KeyboardConstants {
+	
+	public static final int PRESS = 0;
+	public static final int RELEASE = 1;
+	
 
 	 /** Key code constant: Unknown key code. */
     public static final int KEYCODE_UNKNOWN         = 0;

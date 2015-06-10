@@ -32,6 +32,9 @@ import java.awt.event.ActionListener;
 @SuppressWarnings("serial")
 public class MainForm extends JFrame {
 
+	private String connectedDeviceAdress = "";
+	private String connectedDeviceName = "";
+	private boolean deviceConnected = false;
 	private JPanel mainPanel;
 	//Hash map stores Components of MainForm frame
 	private HashMap<String, Component> componentMap;
@@ -215,6 +218,42 @@ public class MainForm extends JFrame {
         }
         return compList;
     }
+
+
+
+	public String getConnectedDeviceAdress() {
+		return connectedDeviceAdress;
+	}
+
+
+
+	public void setConnectedDeviceAdress(String connectedDeviceAdress) {
+		this.connectedDeviceAdress = connectedDeviceAdress;
+	}
+
+
+
+	public String getConnectedDeviceName() {
+		return connectedDeviceName;
+	}
+
+
+
+	public void setConnectedDeviceName(String connectedDeviceName) {
+		this.connectedDeviceName = connectedDeviceName;
+	}
+
+
+
+	public boolean isDeviceConnected() {
+		return deviceConnected;
+	}
+
+
+
+	public void setDeviceConnected(boolean deviceConnected) {
+		this.deviceConnected = deviceConnected;
+	}
 }
 
 

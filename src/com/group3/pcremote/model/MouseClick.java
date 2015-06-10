@@ -3,11 +3,11 @@ package com.group3.pcremote.model;
 import com.group3.pcremote.constant.MouseConstants;
 
 public class MouseClick {
-	private int buttonNum;
+	private int buttonIndex;
 	private int press;
 	public MouseClick() {
 		// TODO Auto-generated constructor stub
-		buttonNum = 1;
+		buttonIndex = 1;
 		press = MouseConstants.CLICK;
 	}   
 	public int getPress() {
@@ -18,12 +18,12 @@ public class MouseClick {
 		this.press = press;
 	}
 
-	public int getButtonNum() {
-		return buttonNum;
+	public int getButtonIndex() {
+		return buttonIndex;
 	}
 
-	public void setButtonNum(int buttonNum) {
-		this.buttonNum = buttonNum;
+	public void setButtonIndex(int buttonIndex) {
+		this.buttonIndex = buttonIndex;
 	}
 	
 
