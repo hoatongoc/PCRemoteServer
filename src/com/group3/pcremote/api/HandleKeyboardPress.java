@@ -1,12 +1,13 @@
 package com.group3.pcremote.api;
 
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 import javax.swing.SwingWorker;
 
 import com.group3.pcremote.constant.KeyboardConstant;
 import com.group3.pcremote.model.KeyboardCommand;
-import com.sun.glass.events.KeyEvent;
+
 
 public class HandleKeyboardPress extends SwingWorker<String, String> {
 
@@ -26,7 +27,8 @@ public class HandleKeyboardPress extends SwingWorker<String, String> {
 		// TODO Auto-generated method stub
 		
 		if(keyboardCommand !=null && robot!=null) {
-			if(keyboardCommand.getKeyboardCode()<=KeyEvent.VK_HELP) {
+			int keyboardCode = keyboardCommand.getKeyboardCode();
+				if(keyboardCode<=KeyEvent.VK_HELP && keyboardCode>-1) {
 				if(keyboardCommand.getPress() == KeyboardConstant.PRESS) {
 					robot.keyPress(keyboardCommand.getKeyboardCode());
 					}

@@ -11,6 +11,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.logging.Logger;
 
+import javax.swing.KeyStroke;
+
 public class Main {
 	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 	public static void main(String[] args) throws AWTException, IOException,
