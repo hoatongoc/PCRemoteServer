@@ -110,7 +110,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 								}
 							}
 							//if command is peform mouse click actions, handle it
-							else if(command.equals(MouseConstant.MOUSE_COMMAND)) {
+							else if(command.equals(MouseConstant.MOUSE_CLICK_COMMAND)) {
 								MouseClick mouseClick = (MouseClick)data.getData();
 								if(mouseClick!=null) {
 									HandleMouseClick handleMouseClick = new HandleMouseClick(mouseClick, robot);
