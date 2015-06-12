@@ -28,7 +28,7 @@ public class HandleKeyboardPress extends SwingWorker<String, String> {
 		
 		if(keyboardCommand !=null && robot!=null) {
 			int keyboardCode = keyboardCommand.getKeyboardCode();
-				if(keyboardCode<=KeyEvent.VK_HELP && keyboardCode>-1) {
+				if(keyboardCode<=KeyEvent.KEY_LAST && keyboardCode>-1) {
 				if(keyboardCommand.getPress() == KeyboardConstant.PRESS) {
 					robot.keyPress(keyboardCommand.getKeyboardCode());
 					}
