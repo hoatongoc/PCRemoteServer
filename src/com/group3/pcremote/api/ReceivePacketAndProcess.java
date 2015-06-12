@@ -15,6 +15,7 @@ import com.group3.pcremote.constant.KeyboardConstant;
 import com.group3.pcremote.constant.MouseConstant;
 import com.group3.pcremote.constant.SocketConstant;
 import com.group3.pcremote.model.ClientInfo;
+import com.group3.pcremote.model.Coordinates;
 import com.group3.pcremote.model.KeyboardCommand;
 import com.group3.pcremote.model.MouseClick;
 import com.group3.pcremote.model.SenderData;
@@ -122,6 +123,13 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 								if(keyboardCommand!=null) {
 									HandleKeyboardPress handleKeyboardPress = new HandleKeyboardPress(keyboardCommand, robot);
 									handleKeyboardPress.execute();
+								}
+							}
+							else if(command.equals(MouseConstant.MOUSE_MOVE_COMMAND)) {
+								Coordinates mousePosition = (Coordinates) data.getData();
+								if(mousePosition!=null) {
+									HandleMouseMoving handleMouseMoving = new HandleMouseMoving(robot, mousePosition);
+									handleMouseMoving.execute();
 								}
 							}
 						}
