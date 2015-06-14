@@ -57,7 +57,6 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 	
 	@Override
 	protected String doInBackground() throws Exception {
-		
 		Robot robot = null;
 		
 		try {

@@ -1,12 +1,12 @@
 package com.group3.pcremote.api;
 
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 import javax.swing.SwingWorker;
 
 import com.group3.pcremote.constant.KeyboardConstant;
 import com.group3.pcremote.model.KeyboardCommand;
-import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 
 public class HandleKeyboardPress extends SwingWorker<String, String> {
@@ -19,6 +19,7 @@ public class HandleKeyboardPress extends SwingWorker<String, String> {
 		super();
 		this.keyboardCommand = keyboardCommand;
 		this.robot = robot;
+		
 	}
 
 
@@ -26,13 +27,13 @@ public class HandleKeyboardPress extends SwingWorker<String, String> {
 	protected String doInBackground() throws Exception {
 		// TODO Auto-generated method stub
 		
-		if(keyboardCommand !=null && robot!=null) {
-			int keyboardCode = keyboardCommand.getKeyboardCode();
-			
-			if(keyboardCode<1) return null;
+		if(keyboardCommand !=null && robot!=null) {			int keyboardCode = keyboardCommand.getKeyboardCode();			if(keyboardCode<1) return null;
 			else if (keyboardCode == KeyboardConstant.VK_ENTER || keyboardCode == KeyboardConstant.VK_TAB || keyboardCode == KeyboardConstant.VK_BACK_SPACE){
+				doType(keyboardCode);
+			}
+			else if (keyboardCode <= KeyboardConstant.VK_ALT){
 				if(keyboardCommand.getPress() == KeyboardConstant.PRESS) {
-					doType(keyboardCode);
+					robot.keyPress(keyboardCode);
 					}
 				else if(keyboardCommand.getPress() == KeyboardConstant.RELEASE) {
 					robot.keyRelease(keyboardCode);
@@ -120,8 +121,9 @@ public class HandleKeyboardPress extends SwingWorker<String, String> {
 	        case KeyboardConstant.VK_QUESTION: doType(KeyboardConstant.VK_SHIFT, KeyboardConstant.VK_SLASH); break;
 	        // """ key
 	        case KeyboardConstant.VK_DOUBLE_QUOTE: doType(KeyboardConstant.VK_SHIFT,KeyboardConstant.VK_QUOTE); break;
-	        // "&" key
-	        
+	        // "Windows" key
+	        //WARNING: THIS IS FOR SHOW AND HIDE START MENU ONLY, CAN'T COMBINE WITH OTHER KEYS!
+	        case KeyboardConstant.VK_WINDOWS: doType(KeyboardConstant.VK_CONTROL,KeyboardConstant.VK_ESCAPE); break;
 			}
 		}
 	}
