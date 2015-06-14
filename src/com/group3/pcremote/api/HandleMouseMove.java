@@ -8,12 +8,12 @@ import javax.swing.SwingWorker;
 
 import com.group3.pcremote.model.Coordinates;
 
-public class HandleMouseMoving extends SwingWorker<String,String> {
+public class HandleMouseMove extends SwingWorker<String,String> {
 
 	Robot robot = null;
 	Coordinates mousePosition = null;
 	
-	public HandleMouseMoving(Robot robot, Coordinates mousePosition) {
+	public HandleMouseMove(Robot robot, Coordinates mousePosition) {
 		super();
 		this.robot = robot;
 		this.mousePosition = mousePosition;

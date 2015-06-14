@@ -128,7 +128,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 							else if(command.equals(MouseConstant.MOUSE_MOVE_COMMAND)) {
 								Coordinates mousePosition = (Coordinates) data.getData();
 								if(mousePosition!=null) {
-									HandleMouseMoving handleMouseMoving = new HandleMouseMoving(robot, mousePosition);
+									HandleMouseMove handleMouseMoving = new HandleMouseMove(robot, mousePosition);
 									handleMouseMoving.execute();
 								}
 							}
