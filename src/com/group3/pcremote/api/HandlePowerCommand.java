@@ -64,7 +64,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 	
 	// execute power operations
 	private void doPowerOperation() {
-		if(powerCommand.getPowerConstant() == PowerConstant.SHUTDOWN) {
+		if(powerCommand.getPowerConstant().equals(PowerConstant.SHUTDOWN)) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
 				//run Shutdown command
@@ -76,7 +76,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 			}
 			System.exit(0);
 		}
-		else if (powerCommand.getPowerConstant() == PowerConstant.SLEEP) {
+		else if (powerCommand.getPowerConstant().equals(PowerConstant.SLEEP)) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
 				//run Sleep command
@@ -88,7 +88,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 			}
 			System.exit(0);
 		}
-		else if (powerCommand.getPowerConstant() == PowerConstant.RESTART) {
+		else if (powerCommand.getPowerConstant().equals(PowerConstant.RESTART)) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
 				//run Restart command
@@ -100,7 +100,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 			}
 			System.exit(0);
 		}
-		else if (powerCommand.getPowerConstant() == PowerConstant.HIBERNATE) {
+		else if (powerCommand.getPowerConstant().equals(PowerConstant.HIBERNATE)) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
 				//run Hibernate command
@@ -112,7 +112,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 			}
 			System.exit(0);
 		}
-		else if (powerCommand.getPowerConstant() == PowerConstant.LOG_OFF) {
+		else if (powerCommand.getPowerConstant().equals(PowerConstant.LOG_OFF)) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
 				runtime.exec("shutdown /l /f");

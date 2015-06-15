@@ -91,28 +91,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 							handleRequestServerInfo.execute();
 			            }
 						
-						else if(mainForm.isDeviceConnected() == true) {
-//							datagramSocket.setSoTimeout(5000);
-//							Timer timer = new Timer();
-//							timer.scheduleAtFixedRate(new TimerTask() {
-//								
-//								@Override
-//								public void run() {
-//									// TODO Auto-generated method stub
-//									MaintainConnection maintainConnection = null;
-//									try {
-//										maintainConnection = new MaintainConnection(datagramSocket, mainForm,
-//												InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
-//									} catch (UnknownHostException e) {
-//										// TODO Auto-generated catch block
-//										e.printStackTrace();
-//									}
-//									if(maintainConnection!=null)
-//										maintainConnection.execute();
-//								}
-//							}, 0,5000);
-//							
-//							
+						if(mainForm.isDeviceConnected() == false) {	
 							
 							//if command is request connection for controlling PC, handle it
 							if(command.equals(SocketConstant.REQUEST_CONNECT)) {
@@ -123,8 +102,11 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 									handleConnectionRequest.execute();
 								}
 							}
+						}
+						else {
+
 							//if command is perform mouse click actions, handle it
-							else if(command.equals(MouseConstant.MOUSE_CLICK_COMMAND)) {
+							if(command.equals(MouseConstant.MOUSE_CLICK_COMMAND)) {
 								MouseClick mouseClick = (MouseClick)data.getData();
 								if(mouseClick!=null) {
 									HandleMouseClick handleMouseClick = new HandleMouseClick(mouseClick, robot);
@@ -164,8 +146,9 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 									handleDisconnectRequest.execute();
 								}
 							}
+						}
+						
 							
-						}	
 					}
 				}
 					
