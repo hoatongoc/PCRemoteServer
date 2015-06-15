@@ -66,8 +66,8 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 		{
 			try {
             	datagramSocket.receive(pk);
-			} catch (SocketTimeoutException e) {
-				HandleDisconnectRequest.clearConnectedDevice(mainForm);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
             System.out.println("Client: " + pk.getAddress() + ":" + pk.getPort());
             ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
@@ -92,27 +92,27 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 			            }
 						
 						else if(mainForm.isDeviceConnected() == true) {
-							datagramSocket.setSoTimeout(5000);
-							Timer timer = new Timer();
-							timer.scheduleAtFixedRate(new TimerTask() {
-								
-								@Override
-								public void run() {
-									// TODO Auto-generated method stub
-									MaintainConnection maintainConnection = null;
-									try {
-										maintainConnection = new MaintainConnection(datagramSocket, mainForm,
-												InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
-									} catch (UnknownHostException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									if(maintainConnection!=null)
-										maintainConnection.execute();
-								}
-							}, 0,5000);
-							
-							
+//							datagramSocket.setSoTimeout(5000);
+//							Timer timer = new Timer();
+//							timer.scheduleAtFixedRate(new TimerTask() {
+//								
+//								@Override
+//								public void run() {
+//									// TODO Auto-generated method stub
+//									MaintainConnection maintainConnection = null;
+//									try {
+//										maintainConnection = new MaintainConnection(datagramSocket, mainForm,
+//												InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
+//									} catch (UnknownHostException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+//									if(maintainConnection!=null)
+//										maintainConnection.execute();
+//								}
+//							}, 0,5000);
+//							
+//							
 							
 							//if command is request connection for controlling PC, handle it
 							if(command.equals(SocketConstant.REQUEST_CONNECT)) {
@@ -164,6 +164,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 									handleDisconnectRequest.execute();
 								}
 							}
+							
 						}	
 					}
 				}
