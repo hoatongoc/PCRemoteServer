@@ -1,5 +1,5 @@
 # PCRemote Server program
-This is the server program for PCRemote app on android
+This is the server program for PCRemote app on Android
 https://github.com/SolitaryWolf/PCRemote.git
 
 NOTES: THIS IS STILL IN DEVELOPMENT, IT'S NOT STABLE AT ALL!
