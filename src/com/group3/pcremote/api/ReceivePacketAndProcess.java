@@ -138,7 +138,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 								}
 							}
 							//if command is request disconnect from server, handle it.
-							else if (command.equals(SocketConstant.CONNECT_DISCONNECT)) {
+							else if (command.equals(SocketConstant.NOTIFY_DISCONNECT_FROM_CLIENT)) {
 								ClientInfo clientInfo = (ClientInfo) data.getData();
 								if(clientInfo!=null) {
 									HandleDisconnectRequest handleDisconnectRequest = 

@@ -9,7 +9,8 @@ public final class SocketConstant {
 	public static final String REQUEST_CONNECT = "RequestConnect";
 	public static final String CONNECT_ACCEPT = "ConnectAccept";
 	public static final String CONNECT_REFUSE = "ConnectRefuse";
-	public static final String CONNECT_DISCONNECT ="ConnectDisconnect"; 
+	public static final String NOTIFY_DISCONNECT_FROM_CLIENT = "DisconnectFromClient";
+	public static final String NOTIFY_DISCONNECT_FROM_SERVER = "DisconnectFromServer";
 	public static final String CONNECT_MAINTAIN_CONNECTION = "ConnectMaintainConnect";
 	public static final String CONNECT_ALIVE = "ConnectAlive";
 }
