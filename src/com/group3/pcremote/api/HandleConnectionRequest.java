@@ -17,12 +17,10 @@ import com.group3.pcremote.model.SenderData;
 //Handle a connection request of Android device
 public class HandleConnectionRequest extends SwingWorker<String, String> {
 
-	MainForm mainForm;
-	DatagramSocket datagramSocket = null;
-	InetAddress offerAdress;
-	String offerName="";
-	
-	
+	private MainForm mainForm;
+	private DatagramSocket datagramSocket = null;
+	private InetAddress offerAdress;
+	private String offerName="";
 	
 	public DatagramSocket getDatagramSocket() {
 		return datagramSocket;
@@ -84,7 +82,7 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 			
 			//If user choose yes option (accept connect) then update UI and send back the confirm packet to android decvice
 			if(connectConfirm == JOptionPane.YES_OPTION) {
-				//mainForm.setDeviceConnected(true);
+				mainForm.setDeviceConnected(true);
 				JLabel offerAdressLabel = (JLabel) mainForm.getComponentByName("dAddrOutput");
 				JLabel offerNameLabel = (JLabel) mainForm.getComponentByName("dNameOutput");
 	            mainForm.setConnectedDeviceAdress(offerAdress.getHostAddress());
@@ -106,11 +104,11 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 			}
 			//else send back to android device the refuse connection packet
 			else if(connectConfirm == JOptionPane.NO_OPTION) {
-				 SenderData confirmData = new SenderData();
-		            confirmData.setCommand(SocketConstant.CONNECT_REFUSE);
-		            SendDatagramObject.send(datagramSocket,confirmData, offerAdress, SocketConstant.PORT);
-		            System.out.println("Sent back to " + offerAdress.getHostAddress());
-					timer.cancel();
+				SenderData confirmData = new SenderData();
+	            confirmData.setCommand(SocketConstant.CONNECT_REFUSE);
+	            SendDatagramObject.send(datagramSocket,confirmData, offerAdress, SocketConstant.PORT);
+	            System.out.println("Sent back to " + offerAdress.getHostAddress());
+				timer.cancel();
 			}
 		return null;
 	}

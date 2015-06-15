@@ -62,13 +62,6 @@ public class HandleRequestServerInfo extends SwingWorker<String, String> {
 		        try {
 					serverInfo.setServerName(InetAddress.getLocalHost().getHostName());
 				} catch (UnknownHostException e) {
-					
-					e.printStackTrace();
-				}
-		        try {
-					serverInfo.setServerIP(InetAddress.getLocalHost().toString());
-				} catch (UnknownHostException e) {
-					
 					e.printStackTrace();
 				}
 		        //bring ServerInfo object into SendData Object, then send it to Android device

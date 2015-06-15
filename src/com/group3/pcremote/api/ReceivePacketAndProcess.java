@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.SwingWorker;
 
@@ -31,32 +36,15 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 //	private String connectedDeviceName = "";
 	
 
-	public MainForm getMainForm() {
-		return mainForm;
-	}
-
-
-	public void setMainForm(MainForm mainForm) {
-		this.mainForm = mainForm;
-	}
-
-
-	public DatagramSocket getDatagramSocket() {
-		return datagramSocket;
-	}
-
-
-	public void setDatagramSocket(DatagramSocket datagramSocket) {
-		this.datagramSocket = datagramSocket;
-	}
-
 	DatagramSocket datagramSocket;
+
+
 	public ReceivePacketAndProcess(MainForm f, DatagramSocket d) {
 		this.mainForm = f;
 		this.datagramSocket = d;
 	}
-	
-	
+
+
 	@Override
 	protected String doInBackground() throws Exception {
 		Robot robot = null;
@@ -76,42 +64,66 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
         //loop for receiving packets and process them
 		while (!isCancelled())
 		{
-	            try {
-	            	datagramSocket.receive(pk);
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-				}
-	            System.out.println("Client: " + pk.getAddress() + ":" + pk.getPort());
-	            ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
-	            ObjectInputStream ois = null;
-				try {
-					ois = new ObjectInputStream(baos);
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-				}
-	            try {
-	            	//read received object
-					SenderData data = (SenderData)ois.readObject();
-					if(data!=null) {
-						//get command of received object
-						Object command = data.getCommand();
-						if(command!=null) {
-							//if command is request info of server, handle it
-							if(command.equals(SocketConstant.REQUEST_SERVER_INFO)) {
-								HandleRequestServerInfo handleRequestServerInfo = new HandleRequestServerInfo(datagramSocket,pk.getAddress(), pk.getPort());
-								handleRequestServerInfo.execute();
-				            }
+			try {
+            	datagramSocket.receive(pk);
+			} catch (SocketTimeoutException e) {
+				HandleDisconnectRequest.clearConnectedDevice(mainForm);
+			}
+            System.out.println("Client: " + pk.getAddress() + ":" + pk.getPort());
+            ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
+            ObjectInputStream ois = null;
+			try {
+				ois = new ObjectInputStream(baos);
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}
+            try {
+            	//read received object
+				SenderData data = (SenderData)ois.readObject();
+				if(data!=null) {
+					//get command of received object
+					Object command = data.getCommand();
+					if(command!=null) {
+						//if command is request info of server, handle it
+						if(command.equals(SocketConstant.REQUEST_SERVER_INFO)) {
+							HandleRequestServerInfo handleRequestServerInfo = new HandleRequestServerInfo(datagramSocket,pk.getAddress(), pk.getPort());
+							handleRequestServerInfo.execute();
+			            }
+						
+						else if(mainForm.isDeviceConnected() == true) {
+							datagramSocket.setSoTimeout(5000);
+							Timer timer = new Timer();
+							timer.scheduleAtFixedRate(new TimerTask() {
+								
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									MaintainConnection maintainConnection = null;
+									try {
+										maintainConnection = new MaintainConnection(datagramSocket, mainForm,
+												InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
+									} catch (UnknownHostException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									if(maintainConnection!=null)
+										maintainConnection.execute();
+								}
+							}, 0,5000);
+							
+							
+							
 							//if command is request connection for controlling PC, handle it
-							else if(command.equals(SocketConstant.REQUEST_CONNECT)) {
+							if(command.equals(SocketConstant.REQUEST_CONNECT)) {
 								ClientInfo clientInfo  = (ClientInfo) data.getData();
 								if(clientInfo!=null) {
-									HandleConnectionRequest handleConnectionRequest = new HandleConnectionRequest(mainForm,datagramSocket,pk.getAddress(),clientInfo.getClientName());
+									HandleConnectionRequest handleConnectionRequest =
+											new HandleConnectionRequest(mainForm,datagramSocket,pk.getAddress(),clientInfo.getClientName());
 									handleConnectionRequest.execute();
 								}
 							}
-							//if command is peform mouse click actions, handle it
+							//if command is perform mouse click actions, handle it
 							else if(command.equals(MouseConstant.MOUSE_CLICK_COMMAND)) {
 								MouseClick mouseClick = (MouseClick)data.getData();
 								if(mouseClick!=null) {
@@ -119,6 +131,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 									handleMouseClick.execute();
 								}
 							}
+							//if command is perform keyboard actions, handle it 
 							else if(command.equals(KeyboardConstant.KEYBOARD_COMMAND)) {
 								KeyboardCommand keyboardCommand = (KeyboardCommand)data.getData();
 								if(keyboardCommand!=null) {
@@ -126,6 +139,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 									handleKeyboardPress.execute();
 								}
 							}
+							//if command is perform mouse move actions, handle it
 							else if(command.equals(MouseConstant.MOUSE_MOVE_COMMAND)) {
 								Coordinates mousePosition = (Coordinates) data.getData();
 								if(mousePosition!=null) {
@@ -133,29 +147,54 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 									handleMouseMoving.execute();
 								}
 							}
+							//if command is perform special power button (shutdown/restart etc.) handle it. 
 							else if (command.equals(PowerConstant.POWER_COMMAND)) {
 								PowerCommand powerCommand = (PowerCommand) data.getData();
 								if(powerCommand !=null) {
 									HandlePowerCommand handlePowerCommand = new HandlePowerCommand(powerCommand);
 									handlePowerCommand.execute();
-									
 								}
 							}
-						}
+							//if command is request disconnect from server, handle it.
+							else if (command.equals(SocketConstant.CONNECT_DISCONNECT)) {
+								ClientInfo clientInfo = (ClientInfo) data.getData();
+								if(clientInfo!=null) {
+									HandleDisconnectRequest handleDisconnectRequest = 
+											new HandleDisconnectRequest(mainForm,clientInfo,pk.getAddress());
+									handleDisconnectRequest.execute();
+								}
+							}
+						}	
 					}
+				}
 					
-				} catch (ClassNotFoundException e) {
+			} catch (ClassNotFoundException e) {
+					
+				e.printStackTrace();
+			} catch (IOException e) {
 					
 					e.printStackTrace();
-				} catch (IOException e) {
-					
-					e.printStackTrace();
-				
-			}
-				
 		}
+	}
 		datagramSocket.close();
 		return null;
+	}
+
+
+	public DatagramSocket getDatagramSocket() {
+		return datagramSocket;
+	}
+
+	public MainForm getMainForm() {
+		return mainForm;
+	}
+	public void setDatagramSocket(DatagramSocket datagramSocket) {
+		this.datagramSocket = datagramSocket;
+	}
+	
+	
+	public void setMainForm(MainForm mainForm) {
+		this.mainForm = mainForm;
 	}
 		
 }

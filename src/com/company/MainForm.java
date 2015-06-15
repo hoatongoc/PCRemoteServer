@@ -23,15 +23,20 @@ import javax.swing.JButton;
 
 import com.group3.pcremote.api.ReceivePacketAndProcess;
 import com.group3.pcremote.api.UpdatePCNameAndIPs;
+import com.group3.pcremote.constant.CommonConstant;
 import com.group3.pcremote.constant.SocketConstant;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JTextArea;
 
 
-@SuppressWarnings("serial")
 public class MainForm extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String connectedDeviceAdress = "";
 	private String connectedDeviceName = "";
 	private boolean deviceConnected = false;
@@ -55,6 +60,7 @@ public class MainForm extends JFrame {
 				try {
 					dSocket = new DatagramSocket(SocketConstant.PORT);
 					final MainForm frame = new MainForm();
+					frame.setResizable(false);
 					frame.setVisible(true);
 					
 					// get PC name and IPs
@@ -82,7 +88,7 @@ public class MainForm extends JFrame {
 	public MainForm() {
 		setTitle("PCRemote");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 432, 237);
+		setBounds(100, 100, 498, 237);
 		mainPanel = new JPanel();
 		mainPanel.setName("mainPanel");
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -109,7 +115,7 @@ public class MainForm extends JFrame {
 		cName.setBounds(10, 11, 81, 14);
 		panel_3.add(cName);
 		
-		JLabel cNameOutput = new JLabel("Computer Name Here");
+		JLabel cNameOutput = new JLabel(CommonConstant.NOT_AVAIABLE);
 		cNameOutput.setName("cNameOutput");
 		cNameOutput.setBounds(131, 11, 140, 14);
 		panel_3.add(cNameOutput);
@@ -166,7 +172,7 @@ public class MainForm extends JFrame {
 		dName.setBounds(10, 7, 91, 14);
 		panel_4.add(dName);
 		
-		JLabel dNameOutput = new JLabel("Device Name Here");
+		JLabel dNameOutput = new JLabel(CommonConstant.NOT_AVAIABLE);
 		dNameOutput.setName("dNameOutput");
 		dNameOutput.setBounds(133, 7, 157, 14);
 		panel_4.add(dNameOutput);
@@ -176,7 +182,7 @@ public class MainForm extends JFrame {
 		dAddr.setBounds(10, 48, 91, 14);
 		panel_4.add(dAddr);
 		
-		JLabel dAddrOutput = new JLabel("Device Address Here");
+		JLabel dAddrOutput = new JLabel(CommonConstant.NOT_AVAIABLE);
 		dAddrOutput.setName("dAddrOutput");
 		dAddrOutput.setBounds(133, 48, 145, 14);
 		panel_4.add(dAddrOutput);
@@ -186,6 +192,13 @@ public class MainForm extends JFrame {
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("About", null, panel_2, null);
+		panel_2.setLayout(new BorderLayout(0, 0));
+		
+		JTextArea txtrAsdkjashdkjAsdahsdkjahsd = new JTextArea();
+		txtrAsdkjashdkjAsdahsdkjahsd.setLineWrap(true);
+		txtrAsdkjashdkjAsdahsdkjahsd.setText("PC Remote Control\r\nVersion 1.0\r\nCopyright © 2015-2016 UIT Group\r\nAll rights reserved\r\nThis app helps you to control your PC remotely and easily\r\nContact us: hoatongoc@gmail.com");
+		txtrAsdkjashdkjAsdahsdkjahsd.setEditable(false);
+		panel_2.add(txtrAsdkjashdkjAsdahsdkjahsd, BorderLayout.CENTER);
 		
 		createComponentMap();
 	}
@@ -253,6 +266,9 @@ public class MainForm extends JFrame {
 
 	public void setDeviceConnected(boolean deviceConnected) {
 		this.deviceConnected = deviceConnected;
+	}
+	public static DatagramSocket getdSocket() {
+		return dSocket;
 	}
 }
 

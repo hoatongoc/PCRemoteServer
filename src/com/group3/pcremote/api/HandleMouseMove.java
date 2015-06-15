@@ -22,16 +22,19 @@ public class HandleMouseMove extends SwingWorker<String,String> {
 	@Override
 	protected String doInBackground() throws Exception {
 		// TODO Auto-generated method stub
+		//get current mouse position
 		Coordinates curMousePosition = new Coordinates();
 		curMousePosition.setX((int)MouseInfo.getPointerInfo().getLocation().getX());
 		curMousePosition.setY((int)MouseInfo.getPointerInfo().getLocation().getY());
 		
+		//get distance of x and y that mouse will move
 		Coordinates newMousePosition = new Coordinates();
 		int newMousePosX = (mousePosition.getX() + curMousePosition.getX())>0?(mousePosition.getX() + curMousePosition.getX()):0;
 		int newMousePosY = (mousePosition.getY() + curMousePosition.getY())>0?(mousePosition.getY() + curMousePosition.getY()):0;
 		
 		newMousePosition.setX(newMousePosX);
 		newMousePosition.setY(newMousePosY);
+		//perform mouse move
 		if(mousePosition!=null && robot!=null) {
 			robot.mouseMove(newMousePosition.getX(), newMousePosition.getY());
 		}

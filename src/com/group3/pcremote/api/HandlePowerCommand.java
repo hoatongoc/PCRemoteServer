@@ -33,7 +33,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 		// TODO Auto-generated method stub
 		if(powerCommand!=null) {
 			
-				
+				//Create timer to execute power operation after 5 seconds
 				Timer timer = new Timer();
 				timer.schedule(new TimerTask() {
 					
@@ -44,13 +44,16 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 					}
 				}, 5000);
 				
+				//display message
 				String message = "Windows will " + powerCommand.getPowerConstant() + " within 5 secs,Press OK to do the operation immediately, Cancel to cancel the operation";
 				String title = powerCommand.getPowerConstant() + "Confirmation";
 				int powerComfirm = JOptionPane.showConfirmDialog(null,message,title,JOptionPane.OK_CANCEL_OPTION);
+				// if press OK button, do the operation immediately
 				if(powerComfirm == JOptionPane.OK_OPTION) {
 					timer.cancel();
 					doPowerOperation();
 				}
+				//if press the CANCEL button, cancel the operation
 				else if (powerComfirm == JOptionPane.CANCEL_OPTION) {
 					timer.cancel();
 				}
@@ -58,13 +61,13 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 		
 		return null;
 	}
-
 	
-	
+	// execute power operations
 	private void doPowerOperation() {
 		if(powerCommand.getPowerConstant() == PowerConstant.SHUTDOWN) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
+				//run Shutdown command
 				runtime.exec("shutdown /s /f");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -76,6 +79,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 		else if (powerCommand.getPowerConstant() == PowerConstant.SLEEP) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
+				//run Sleep command
 				runtime.exec("Rundll32.exe Powrprof.dll,SetSuspendState Sleep");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -87,6 +91,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 		else if (powerCommand.getPowerConstant() == PowerConstant.RESTART) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
+				//run Restart command
 				runtime.exec("shutdown -r -t 0 /f");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -98,6 +103,7 @@ public class HandlePowerCommand extends SwingWorker<String, String> {
 		else if (powerCommand.getPowerConstant() == PowerConstant.HIBERNATE) {
 			Runtime runtime = Runtime.getRuntime();
 			try {
+				//run Hibernate command
 				runtime.exec("shutdown /h /f");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
