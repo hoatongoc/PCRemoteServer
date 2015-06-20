@@ -31,7 +31,7 @@ public class MaintainConnection extends SwingWorker<String, String> {
 		if(datagramSocket !=null && mainForm!=null) {
 			//send Maintain connection data back to android device
 			SenderData senderData = new SenderData();
-			senderData.setCommand(SocketConstant.CONNECT_MAINTAIN_CONNECTION);
+			senderData.setCommand(SocketConstant.MAINTAIN_CONNECTION);
 			SendDatagramObject.send(datagramSocket, senderData, inetAddress, port);
 		}
 		return null;
