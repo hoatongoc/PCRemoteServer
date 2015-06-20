@@ -98,9 +98,34 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 					System.out.println("Sent back to " + offerAdress.getHostAddress());
 					timer.cancel();
 				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
+				
 					e.printStackTrace();
 				}
+	            
+	            //run timer to check the connection is alive or not
+	            mainForm.getTimerConnectionAlive().cancel();
+	            mainForm.setTimerConnectionAlive(new Timer());
+	            mainForm.getTimerConnectionAlive().scheduleAtFixedRate(new TimerTask() {
+					
+					@Override
+					public void run() {
+						int count = mainForm.getCountAlive();
+						mainForm.setCountAlive(count+1);
+						SenderData mainTainConnectionData = new SenderData();
+						mainTainConnectionData.setCommand(SocketConstant.MAINTAIN_CONNECTION);
+						try {
+							SendDatagramObject.send(datagramSocket, mainTainConnectionData,
+									InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
+							System.out.println("Sent maintain connect");
+						} catch (UnknownHostException e) {
+							// TODO Auto-generated catch block
+							
+						}
+					}
+				}, 1000, 1000);
+	            mainForm.setConnectionAlive(true);
+	            
+	            
 			}
 			//else send back to android device the refuse connection packet
 			else if(connectConfirm == JOptionPane.NO_OPTION) {

@@ -68,6 +68,9 @@ public class HandleDisconnectRequest extends SwingWorker<String, String> {
 		JLabel offerNameLabel = (JLabel) mForm.getComponentByName("dNameOutput");
 		offerAdressLabel.setText(mForm.getConnectedDeviceAdress());
 		offerNameLabel.setText(mForm.getConnectedDeviceName());
+		mForm.setConnectionAlive(false); //connection not alive anymore, countAlive = 0;
+		if(mForm.getTimerConnectionAlive()!=null)
+			mForm.getTimerConnectionAlive().cancel();
 		
 		try {
 			MainForm.getdSocket().setSoTimeout(0);

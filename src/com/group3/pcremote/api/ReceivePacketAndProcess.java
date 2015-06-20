@@ -59,11 +59,14 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
         
         byte[] buffer= new byte[6000];
         DatagramPacket pk= new DatagramPacket(buffer, buffer.length);
+        CheckConnectionAlive checkConnectionAlive = new CheckConnectionAlive(mainForm);
+        checkConnectionAlive.execute();
         
 		
         //loop for receiving packets and process them
 		while (!isCancelled())
 		{
+			
 			try {
             	datagramSocket.receive(pk);
 			} catch (Exception e) {
@@ -146,9 +149,11 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 									handleDisconnectRequest.execute();
 								}
 							}
-						}
-						
-							
+							else if(command.equals(SocketConstant.MAINTAIN_CONNECTION)) {
+								mainForm.setConnectionAlive(true);
+								mainForm.setCountAlive(0);
+							}
+						}			
 					}
 				}
 					

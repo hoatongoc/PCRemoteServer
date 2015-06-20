@@ -15,6 +15,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.JLabel;
@@ -40,6 +41,14 @@ public class MainForm extends JFrame {
 	private String connectedDeviceAdress = "";
 	private String connectedDeviceName = "";
 	private boolean deviceConnected = false;
+	private static Timer timerConnectionAlive = null;
+	private int countAlive = 0;
+	/* if connection between android device and
+	 * PC is alive, it's true, otherwise false,
+	 * delete all data of connected android device 
+	 * */
+	private boolean connectionAlive = false;  
+	
 	private JPanel mainPanel;
 	//Hash map stores Components of MainForm frame
 	private HashMap<String, Component> componentMap;
@@ -58,7 +67,10 @@ public class MainForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					dSocket = new DatagramSocket(SocketConstant.PORT);
+					timerConnectionAlive = new Timer();
+					
 					final MainForm frame = new MainForm();
 					frame.setResizable(false);
 					frame.setVisible(true);
@@ -79,8 +91,6 @@ public class MainForm extends JFrame {
 			}
 		});
 	}
-	
-	
 	
 	/**
 	 * Create the frame.
@@ -219,7 +229,6 @@ public class MainForm extends JFrame {
         }
         else return null;
     }
-
     //Get all components of frame
     public List<Component> getAllComponents(final Container c) {
         Component[] comps = c.getComponents();
@@ -232,44 +241,59 @@ public class MainForm extends JFrame {
         return compList;
     }
 
-
-
 	public String getConnectedDeviceAdress() {
 		return connectedDeviceAdress;
 	}
-
-
 
 	public void setConnectedDeviceAdress(String connectedDeviceAdress) {
 		this.connectedDeviceAdress = connectedDeviceAdress;
 	}
 
-
-
 	public String getConnectedDeviceName() {
 		return connectedDeviceName;
 	}
-
-
 
 	public void setConnectedDeviceName(String connectedDeviceName) {
 		this.connectedDeviceName = connectedDeviceName;
 	}
 
-
-
 	public boolean isDeviceConnected() {
 		return deviceConnected;
 	}
 
-
-
 	public void setDeviceConnected(boolean deviceConnected) {
 		this.deviceConnected = deviceConnected;
 	}
+	
 	public static DatagramSocket getdSocket() {
 		return dSocket;
 	}
+
+	public boolean isConnectionAlive() {
+		return connectionAlive;
+	}
+
+	public void setConnectionAlive(boolean connectionAlive) {
+		this.connectionAlive = connectionAlive;
+		if(this.connectionAlive == false) countAlive = 0;
+	}
+
+	public Timer getTimerConnectionAlive() {
+		return timerConnectionAlive;
+	}
+
+	public void setTimerConnectionAlive(Timer timerConnectionAlive) {
+		this.timerConnectionAlive = timerConnectionAlive;
+	}
+
+	public int getCountAlive() {
+		return countAlive;
+	}
+
+	public void setCountAlive(int countAlive) {
+		this.countAlive = countAlive;
+	}
+
 }
 
 
