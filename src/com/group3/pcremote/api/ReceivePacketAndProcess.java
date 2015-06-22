@@ -59,8 +59,8 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
         
         byte[] buffer= new byte[6000];
         DatagramPacket pk= new DatagramPacket(buffer, buffer.length);
-        CheckConnectionAlive checkConnectionAlive = new CheckConnectionAlive(mainForm);
-        checkConnectionAlive.execute();
+//        CheckConnectionAlive checkConnectionAlive = new CheckConnectionAlive(mainForm);
+//        checkConnectionAlive.execute();
         
 		
         //loop for receiving packets and process them
@@ -90,6 +90,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 					if(command!=null) {
 						//if command is request info of server, handle it
 						if(command.equals(SocketConstant.REQUEST_SERVER_INFO)) {
+							System.out.println("Receive request sever info from " + pk.getAddress().getHostAddress());
 							HandleRequestServerInfo handleRequestServerInfo = new HandleRequestServerInfo(datagramSocket,pk.getAddress(), pk.getPort());
 							handleRequestServerInfo.execute();
 			            }
@@ -98,6 +99,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 							
 							//if command is request connection for controlling PC, handle it
 							if(command.equals(SocketConstant.REQUEST_CONNECT)) {
+								System.out.println("Receive request connect");
 								ClientInfo clientInfo  = (ClientInfo) data.getData();
 								if(clientInfo!=null) {
 									HandleConnectionRequest handleConnectionRequest =
@@ -110,6 +112,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 
 							//if command is perform mouse click actions, handle it
 							if(command.equals(MouseConstant.MOUSE_CLICK_COMMAND)) {
+								System.out.println("Receive mouse click command");
 								MouseClick mouseClick = (MouseClick)data.getData();
 								if(mouseClick!=null) {
 									HandleMouseClick handleMouseClick = new HandleMouseClick(mouseClick, robot);
@@ -118,6 +121,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 							}
 							//if command is perform keyboard actions, handle it 
 							else if(command.equals(KeyboardConstant.KEYBOARD_COMMAND)) {
+								System.out.println("Receive keyboard command");
 								KeyboardCommand keyboardCommand = (KeyboardCommand)data.getData();
 								if(keyboardCommand!=null) {
 									HandleKeyboardPress handleKeyboardPress = new HandleKeyboardPress(keyboardCommand, robot);
@@ -126,6 +130,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 							}
 							//if command is perform mouse move actions, handle it
 							else if(command.equals(MouseConstant.MOUSE_MOVE_COMMAND)) {
+								System.out.println("Receive mouse move command");
 								Coordinates mousePosition = (Coordinates) data.getData();
 								if(mousePosition!=null) {
 									HandleMouseMove handleMouseMoving = new HandleMouseMove(robot, mousePosition);
@@ -134,6 +139,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 							}
 							//if command is perform special power button (shutdown/restart etc.) handle it. 
 							else if (command.equals(PowerConstant.POWER_COMMAND)) {
+								System.out.println("Receive power command");
 								PowerCommand powerCommand = (PowerCommand) data.getData();
 								if(powerCommand !=null) {
 									HandlePowerCommand handlePowerCommand = new HandlePowerCommand(powerCommand);
@@ -142,6 +148,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 							}
 							//if command is request disconnect from server, handle it.
 							else if (command.equals(SocketConstant.NOTIFY_DISCONNECT_FROM_CLIENT)) {
+								System.out.println("Receive notify  disconnect");
 								ClientInfo clientInfo = (ClientInfo) data.getData();
 								if(clientInfo!=null) {
 									HandleDisconnectRequest handleDisconnectRequest = 
@@ -150,6 +157,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 								}
 							}
 							else if(command.equals(SocketConstant.MAINTAIN_CONNECTION)) {
+								System.out.println("Receive maintain connection from " + pk.getAddress().getHostAddress());
 								mainForm.setConnectionAlive(true);
 								mainForm.setCountAlive(0);
 							}

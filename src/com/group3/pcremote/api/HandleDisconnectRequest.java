@@ -61,6 +61,7 @@ public class HandleDisconnectRequest extends SwingWorker<String, String> {
 	}
 	
 	public static void clearConnectedDevice(MainForm mForm) {
+		System.out.println("Disconnected");
 		mForm.setConnectedDeviceAdress(CommonConstant.NOT_AVAIABLE);
 		mForm.setConnectedDeviceName(CommonConstant.NOT_AVAIABLE);
 		mForm.setDeviceConnected(false);

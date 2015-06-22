@@ -18,9 +18,10 @@ public class CheckConnectionAlive extends SwingWorker<String, String> {
 		// TODO Auto-generated method stub
 		while(!isCancelled()){
 			if(mainForm !=null) {
-				if(mainForm.getCountAlive() >= 5)
+				if(mainForm.getCountAlive() >= 5){
 					System.out.println("Disconnected");
 					HandleDisconnectRequest.clearConnectedDevice(mainForm);
+				}
 			}
 		}
 		return null;

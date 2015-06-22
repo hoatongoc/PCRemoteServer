@@ -75,7 +75,7 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 			
 			
 			//show the confim dialog
-			String message = "Device blah blah " + offerName + " want to connect. Confirm?\n Yes to accept, No to refuse the connect";
+			String message = "Device " + offerName + " wants to connect.\n Yes to accept, No to refuse the connect";
 			String title = "Connect Confirmation";
 			
 			int connectConfirm = JOptionPane.showConfirmDialog(null,message,title,JOptionPane.YES_NO_OPTION);
@@ -98,7 +98,6 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 					System.out.println("Sent back to " + offerAdress.getHostAddress());
 					timer.cancel();
 				} catch (UnknownHostException e) {
-				
 					e.printStackTrace();
 				}
 	            
@@ -113,14 +112,20 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 						mainForm.setCountAlive(count+1);
 						SenderData mainTainConnectionData = new SenderData();
 						mainTainConnectionData.setCommand(SocketConstant.MAINTAIN_CONNECTION);
-						try {
-							SendDatagramObject.send(datagramSocket, mainTainConnectionData,
-									InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
-							System.out.println("Sent maintain connect");
-						} catch (UnknownHostException e) {
-							// TODO Auto-generated catch block
-							
+						if(mainForm !=null) {
+							if(mainForm.getCountAlive() >= 5){
+								HandleDisconnectRequest.clearConnectedDevice(mainForm);
+							}
+							else {
+								try {
+									SendDatagramObject.send(datagramSocket, mainTainConnectionData,
+											InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
+									System.out.println("Sent maintain connect packet " + mainForm.getCountAlive());
+								} catch (UnknownHostException e) {}
+							}
 						}
+						
+ 						
 					}
 				}, 1000, 1000);
 	            mainForm.setConnectionAlive(true);
