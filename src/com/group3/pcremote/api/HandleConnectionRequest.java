@@ -101,7 +101,9 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 					e.printStackTrace();
 				}
 	            
-	            //run timer to check the connection is alive or not
+	            mainForm.setConnectionAlive(true); //connected, set connection state to alive
+	            
+	            // create new and run timer to check the connection is alive or not
 	            mainForm.getTimerConnectionAlive().cancel();
 	            mainForm.setTimerConnectionAlive(new Timer());
 	            mainForm.getTimerConnectionAlive().scheduleAtFixedRate(new TimerTask() {
@@ -113,24 +115,22 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 						SenderData mainTainConnectionData = new SenderData();
 						mainTainConnectionData.setCommand(SocketConstant.MAINTAIN_CONNECTION);
 						if(mainForm !=null) {
-							if(mainForm.getCountAlive() >= 5){
+							if(mainForm.getCountAlive() >= 5){ // if count alive >=5 -> disconnect
 								HandleDisconnectRequest.clearConnectedDevice(mainForm);
 							}
 							else {
-								try {
+								try { //if still connecting, send maintain connection command
 									SendDatagramObject.send(datagramSocket, mainTainConnectionData,
 											InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
-									System.out.println("Sent maintain connect packet " + mainForm.getCountAlive());
-								} catch (UnknownHostException e) {}
+									System.out.println("Sent maintain connect packet " + mainForm.getCountAlive() + " to " + mainForm.getConnectedDeviceAdress());
+								} catch (Exception e) {
+								}
 							}
 						}
 						
  						
 					}
 				}, 1000, 1000);
-	            mainForm.setConnectionAlive(true);
-	            
-	            
 			}
 			//else send back to android device the refuse connection packet
 			else if(connectConfirm == JOptionPane.NO_OPTION) {

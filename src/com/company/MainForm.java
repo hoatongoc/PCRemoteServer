@@ -23,9 +23,11 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 
 import com.group3.pcremote.api.ReceivePacketAndProcess;
+import com.group3.pcremote.api.SendDatagramObject;
 import com.group3.pcremote.api.UpdatePCNameAndIPs;
 import com.group3.pcremote.constant.CommonConstant;
 import com.group3.pcremote.constant.SocketConstant;
+import com.group3.pcremote.model.SenderData;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -143,7 +145,16 @@ public class MainForm extends JFrame {
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			
+				
+//				SenderData mainTainConnectionData = new SenderData();
+//				mainTainConnectionData.setCommand(SocketConstant.MAINTAIN_CONNECTION);
+//				try { //if still connecting, send maintain connection command
+//					SendDatagramObject.send(dSocket, mainTainConnectionData,
+//							InetAddress.getByName(getConnectedDeviceAdress()), SocketConstant.PORT);
+//					System.out.println("Sent maintain connect packet MainForm " + getCountAlive() + " to " + getConnectedDeviceAdress());
+//				} catch (Exception e) {
+//				}
+//				
 				InetAddress addr = null;
 		        InetAddress[] addrs = null;
 		        @SuppressWarnings("unchecked")
