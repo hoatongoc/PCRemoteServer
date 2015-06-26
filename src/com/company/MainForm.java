@@ -1,9 +1,15 @@
 package com.company;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,19 +24,21 @@ import java.util.List;
 import java.util.Timer;
 
 import javax.swing.border.EtchedBorder;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 
 import com.group3.pcremote.api.ReceivePacketAndProcess;
-import com.group3.pcremote.api.SendDatagramObject;
 import com.group3.pcremote.api.UpdatePCNameAndIPs;
 import com.group3.pcremote.constant.CommonConstant;
 import com.group3.pcremote.constant.SocketConstant;
-import com.group3.pcremote.model.SenderData;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JTextArea;
 
 
@@ -50,7 +58,7 @@ public class MainForm extends JFrame {
 	 * delete all data of connected android device 
 	 * */
 	private boolean connectionAlive = false;  
-	
+	static MainForm frame=null;
 	private JPanel mainPanel;
 	//Hash map stores Components of MainForm frame
 	private HashMap<String, Component> componentMap;
@@ -73,7 +81,7 @@ public class MainForm extends JFrame {
 					dSocket = new DatagramSocket(SocketConstant.PORT);
 					timerConnectionAlive = new Timer();
 					
-					final MainForm frame = new MainForm();
+					frame = new MainForm();
 					frame.setResizable(false);
 					frame.setVisible(true);
 					
@@ -84,6 +92,17 @@ public class MainForm extends JFrame {
 					//Begin receive and handle connections
 					ReceivePacketAndProcess receiveAndProcess = new ReceivePacketAndProcess(frame,dSocket);
 					receiveAndProcess.execute();
+					
+					
+					frame.addWindowListener(new WindowAdapter(){
+
+				          public void windowIconified(WindowEvent e){
+				                frame.setVisible(false);
+				          }
+				    });
+					//create system tray icon
+					CreateSystemTrayIcon();
+					
 					
 					
 				} catch (Exception e) {
@@ -252,6 +271,65 @@ public class MainForm extends JFrame {
         return compList;
     }
 
+    public static void CreateSystemTrayIcon() {
+    	if (!SystemTray.isSupported()) {
+            System.out.println("SystemTray is not supported");
+            return;
+        }
+    	final PopupMenu popup = new PopupMenu();
+        final TrayIcon trayIcon =
+                new TrayIcon(createImage("/images/trayicon.png", "tray icon"));
+        final SystemTray tray = SystemTray.getSystemTray();
+        // Create a popup menu components
+        MenuItem displayItem = new MenuItem("Show");
+        MenuItem exitItem = new MenuItem("Exit");
+        
+        popup.add(displayItem);
+        popup.add(exitItem);
+        
+        trayIcon.setPopupMenu(popup);
+        
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException e) {
+            System.out.println("TrayIcon could not be added.");
+            return;
+        }
+        exitItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                tray.remove(trayIcon);
+                System.exit(0);
+            }
+        });
+        displayItem.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				frame.setVisible(true);
+			}
+		});
+        trayIcon.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				frame.setVisible(true);
+			}
+		});
+        
+    }
+    
+    
+    protected static Image createImage(String path, String description) {
+        URL imageURL = MainForm.class.getResource(path);
+         
+        if (imageURL == null) {
+            System.err.println("Resource not found: " + path);
+            return null;
+        } else {
+            return (new ImageIcon(imageURL, description)).getImage();
+        }
+    }
+    
 	public String getConnectedDeviceAdress() {
 		return connectedDeviceAdress;
 	}
