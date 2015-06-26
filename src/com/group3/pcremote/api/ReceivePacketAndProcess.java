@@ -24,6 +24,7 @@ import com.group3.pcremote.model.ClientInfo;
 import com.group3.pcremote.model.Coordinates;
 import com.group3.pcremote.model.KeyboardCommand;
 import com.group3.pcremote.model.MouseClick;
+import com.group3.pcremote.model.MouseScroll;
 import com.group3.pcremote.model.PowerCommand;
 import com.group3.pcremote.model.SenderData;
 import com.group3.pcremote.api.HandleConnectionRequest;
@@ -160,6 +161,14 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 								System.out.println("Receive maintain connection from " + pk.getAddress().getHostAddress());
 								mainForm.setConnectionAlive(true);
 								mainForm.setCountAlive(0);
+							}
+							else if(command.equals(MouseConstant.MOUSE_SCROLL)) {
+								MouseScroll mouseScroll = (MouseScroll)data.getData();
+								if(mouseScroll!=null) {
+									System.out.println("Receive mouse scroll command " + mouseScroll.getScrollValue());
+									HandleMouseScroll handleMouseScroll = new HandleMouseScroll(mouseScroll,robot);
+									handleMouseScroll.execute();
+								}
 							}
 						}			
 					}
