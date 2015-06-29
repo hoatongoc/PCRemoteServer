@@ -153,7 +153,7 @@ public class ReceivePacketAndProcess extends SwingWorker<String, String>{
 								ClientInfo clientInfo = (ClientInfo) data.getData();
 								if(clientInfo!=null) {
 									HandleDisconnectRequest handleDisconnectRequest = 
-											new HandleDisconnectRequest(mainForm,clientInfo,pk.getAddress());
+											new HandleDisconnectRequest(mainForm,clientInfo,pk.getAddress(),robot);
 									handleDisconnectRequest.execute();
 								}
 							}

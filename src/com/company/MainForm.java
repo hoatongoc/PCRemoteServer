@@ -83,7 +83,7 @@ public class MainForm extends JFrame {
 					
 					frame = new MainForm();
 					frame.setResizable(false);
-					frame.setVisible(true);
+					frame.setVisible(false);
 					
 					// get PC name and IPs
 					UpdatePCNameAndIPs updatePCNameAndIPs = new UpdatePCNameAndIPs(frame);
@@ -226,18 +226,15 @@ public class MainForm extends JFrame {
 		dAddrOutput.setBounds(133, 48, 145, 14);
 		panel_4.add(dAddrOutput);
 		
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Settings", null, panel_1, null);
-		
-		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("About", null, panel_2, null);
-		panel_2.setLayout(new BorderLayout(0, 0));
+		JPanel aboutTab = new JPanel();
+		tabbedPane.addTab("About", null, aboutTab, null);
+		aboutTab.setLayout(new BorderLayout(0, 0));
 		
 		JTextArea txtrAsdkjashdkjAsdahsdkjahsd = new JTextArea();
 		txtrAsdkjashdkjAsdahsdkjahsd.setLineWrap(true);
 		txtrAsdkjashdkjAsdahsdkjahsd.setText("PC Remote Control\r\nVersion 1.0\r\nCopyright © 2015-2016 UIT Group\r\nAll rights reserved\r\nThis app helps you to control your PC remotely and easily\r\nContact us: hoatongoc@gmail.com");
 		txtrAsdkjashdkjAsdahsdkjahsd.setEditable(false);
-		panel_2.add(txtrAsdkjashdkjAsdahsdkjahsd, BorderLayout.CENTER);
+		aboutTab.add(txtrAsdkjashdkjAsdahsdkjahsd, BorderLayout.CENTER);
 		
 		createComponentMap();
 	}
