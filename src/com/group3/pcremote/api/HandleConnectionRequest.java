@@ -13,6 +13,7 @@ import javax.swing.SwingWorker;
 import com.company.MainForm;
 import com.group3.pcremote.constant.SocketConstant;
 import com.group3.pcremote.model.SenderData;
+import com.group3.pcremote.model.ServerInfo;
 
 //Handle a connection request of Android device
 public class HandleConnectionRequest extends SwingWorker<String, String> {
@@ -93,6 +94,9 @@ public class HandleConnectionRequest extends SwingWorker<String, String> {
 	            //Send confirm packet back to Android device
 	            SenderData confirmData = new SenderData();
 	            confirmData.setCommand(SocketConstant.CONNECT_ACCEPT);
+	            ServerInfo serverInfo = new ServerInfo();
+	            serverInfo.setServerName(InetAddress.getLocalHost().getHostName());
+	            confirmData.setData(serverInfo);
 	            try {
 					SendDatagramObject.send(datagramSocket,confirmData, InetAddress.getByName(mainForm.getConnectedDeviceAdress()), SocketConstant.PORT);
 					System.out.println("Sent back to " + offerAdress.getHostAddress());

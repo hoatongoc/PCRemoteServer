@@ -95,7 +95,6 @@ public class MainForm extends JFrame {
 					
 					
 					frame.addWindowListener(new WindowAdapter(){
-
 				          public void windowIconified(WindowEvent e){
 				                frame.setVisible(false);
 				          }
