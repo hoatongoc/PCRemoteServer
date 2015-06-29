@@ -12,7 +12,6 @@ import com.company.MainForm;
 import com.group3.pcremote.constant.CommonConstant;
 import com.group3.pcremote.constant.KeyboardConstant;
 import com.group3.pcremote.model.ClientInfo;
-import com.sun.glass.events.MouseEvent;
 
 public class HandleDisconnectRequest extends SwingWorker<String, String> {
 	private MainForm mainForm = null;
