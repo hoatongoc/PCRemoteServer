@@ -312,6 +312,7 @@ public class MainForm extends JFrame {
 			}
 		});
         
+        trayIcon.displayMessage("Note", "To open main UI, click to the icon", TrayIcon.MessageType.INFO);
     }
     
     
