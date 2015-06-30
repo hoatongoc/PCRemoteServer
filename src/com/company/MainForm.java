@@ -84,7 +84,7 @@ public class MainForm extends JFrame {
 					frame = new MainForm();
 					frame.setResizable(false);
 					frame.setVisible(false);
-					
+					frame.setIconImage(createImage("/images/trayicon.png", "tray icon"));
 					// get PC name and IPs
 					UpdatePCNameAndIPs updatePCNameAndIPs = new UpdatePCNameAndIPs(frame);
 					updatePCNameAndIPs.execute();
